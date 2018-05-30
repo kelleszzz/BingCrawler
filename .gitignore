@@ -1,5 +1,6 @@
 # User Data
-MyData
+CrawledData
+lib/ChromeUserData
 
 *.log
 
