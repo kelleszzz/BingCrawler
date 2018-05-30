@@ -1,7 +1,5 @@
 package com.kelles.crawler.bingcrawler.database;
 
-import java.io.UnsupportedEncodingException;
-
 import com.kelles.crawler.bingcrawler.util.*;
 import com.kelles.crawler.bingcrawler.bean.*;
 import com.sleepycat.bind.serial.SerialBinding;
@@ -24,7 +22,7 @@ public class UrlsWeightKeyCreator  implements SecondaryKeyCreator{
     DatabaseEntry dataEntry,
     DatabaseEntry resultEntry) {
 		CrawlUrl crawlUrl=(CrawlUrl) serialBinding.entryToObject(dataEntry);
-		resultEntry.setData(Utils.intToByteArray(crawlUrl.getWeight()));
+		resultEntry.setData(Util.intToByteArray(crawlUrl.getWeight()));
 		return true;
 	}
 }

@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.kelles.crawler.bingcrawler.setting.Setting;
 import org.ansj.domain.Result;
 import org.ansj.splitWord.analysis.ToAnalysis;
 import org.apache.http.util.TextUtils;
@@ -172,7 +173,7 @@ public class TextAnalysis {
 		// 构造一个用户词典
 	    try {
 	    	if (!ifInitAnsj){
-	    		Library.makeForest("library/default.dic");
+	    		Library.makeForest(Setting.ANSJ_LIBRARY);
 	    		ifInitAnsj=true;
 	    	}
 		} catch (Exception e) {

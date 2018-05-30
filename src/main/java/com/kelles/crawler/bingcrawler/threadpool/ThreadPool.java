@@ -166,7 +166,7 @@ public class ThreadPool<TaskObjectType extends TaskInterface> {
 			/*从threads中移除*/
 			for (TaskThread thread:threads){
 				byte[] threadKeyBytes=thread.getTask().getKeyBytes();
-				if (Utils.byteArrayEquals(keyBytes, threadKeyBytes)){
+				if (Util.byteArrayEquals(keyBytes, threadKeyBytes)){
 					threads.remove(thread);
 					break;
 				}
@@ -186,7 +186,7 @@ public class ThreadPool<TaskObjectType extends TaskInterface> {
 			/*从threads中移除*/
 			for (TaskThread thread:threads){
 				byte[] threadKeyBytes=thread.getTask().getKeyBytes();
-				if (Utils.byteArrayEquals(keyBytes, threadKeyBytes)){
+				if (Util.byteArrayEquals(keyBytes, threadKeyBytes)){
 					threads.remove(thread);
 					break;
 				}

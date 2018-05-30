@@ -3,7 +3,6 @@ package com.kelles.crawler.bingcrawler.dataanalysis.bean;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -12,7 +11,6 @@ import java.util.Set;
 
 import com.kelles.crawler.bingcrawler.database.weightdb.WeightInterface;
 import com.kelles.crawler.bingcrawler.util.*;
-import com.kelles.crawler.bingcrawler.bean.*;
 
 public class Journal implements Serializable,WeightInterface {
 	
@@ -33,9 +31,9 @@ public class Journal implements Serializable,WeightInterface {
 		StringBuilder sb=new StringBuilder();
 		sb.append("[期刊或会议名]\r\n"+name+"\r\n");
 		sb.append("[爬取论文数]\r\n"+profiles.size()+"\r\n");
-		sb.append(Utils.formatTopMapStr(profilesCitedBy,"引用最多的论文","引用数",topCount));
-		sb.append(Utils.formatTopMapStr(keywords,"涉及领域","总引用数",topCount));
-		sb.append(Utils.formatTopMapStr(authors,"影响力最大的作者","引用数",topCount));
+		sb.append(Util.formatTopMapStr(profilesCitedBy,"引用最多的论文","引用数",topCount));
+		sb.append(Util.formatTopMapStr(keywords,"涉及领域","总引用数",topCount));
+		sb.append(Util.formatTopMapStr(authors,"影响力最大的作者","引用数",topCount));
 		if (!years.isEmpty()){
 			sb.append("[发表年代统计]\r\n");
 			List<Integer> keys=new ArrayList(years.keySet());

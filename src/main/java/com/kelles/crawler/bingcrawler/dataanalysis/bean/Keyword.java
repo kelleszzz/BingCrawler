@@ -13,7 +13,6 @@ import java.util.Set;
 
 import com.kelles.crawler.bingcrawler.database.weightdb.WeightInterface;
 import com.kelles.crawler.bingcrawler.util.*;
-import com.kelles.crawler.bingcrawler.bean.*;
 
 public class Keyword implements Serializable,WeightInterface{
 	private int weight=DEFAULT_WEIGHT;
@@ -45,7 +44,7 @@ public class Keyword implements Serializable,WeightInterface{
 		int totalCitedBy=0;
 		if (profiles.size()>0){
 			sb.append("[爬取论文数]\r\n"+profiles.size()+"\r\n");
-			if (!profilesCitedBy.isEmpty()) sb.append(Utils.formatTopMapStr(profilesCitedBy, "引用数最高的论文", "次数",topCount));
+			if (!profilesCitedBy.isEmpty()) sb.append(Util.formatTopMapStr(profilesCitedBy, "引用数最高的论文", "次数",topCount));
 		}
 		if (totalCitedBy>0){
 			sb.append("[论文总引用数]\r\n"+totalCitedBy+"\r\n");
@@ -61,10 +60,10 @@ public class Keyword implements Serializable,WeightInterface{
 				sb.append(key+"年"+"发表了"+years.get(key)+"部作品"+"\r\n");
 		}
 		if (!journals.isEmpty()){
-			sb.append(Utils.formatTopMapStr(journals, "期刊会议统计", "发表论文数",topCount));
+			sb.append(Util.formatTopMapStr(journals, "期刊会议统计", "发表论文数",topCount));
 		}
 		if (!authors.isEmpty()){
-			sb.append(Utils.formatTopMapStr(authors, "影响力最大的作者","引用数",topCount));
+			sb.append(Util.formatTopMapStr(authors, "影响力最大的作者","引用数",topCount));
 		}
 		if (!relatedKeywords.isEmpty()){
 			int curCount=0;

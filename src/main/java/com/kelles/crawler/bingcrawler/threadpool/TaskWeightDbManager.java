@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.kelles.crawler.bingcrawler.database.weightdb.WeightDbManager;
 import com.kelles.crawler.bingcrawler.database.weightdb.WeightInterface;
-import com.kelles.crawler.bingcrawler.util.Utils;
+import com.kelles.crawler.bingcrawler.util.Util;
 import com.sleepycat.je.Cursor;
 import com.sleepycat.je.DatabaseEntry;
 import com.sleepycat.je.LockMode;
@@ -68,7 +68,7 @@ extends WeightDbManager<ValueObjectClass> {
 					byte[] curBytes=foundKey.getData();
 					if (listKeyBytes!=null)
 						for (byte[] existedBytes:listKeyBytes)
-							if (Utils.byteArrayEquals(curBytes, existedBytes)){
+							if (Util.byteArrayEquals(curBytes, existedBytes)){
 								/*出现了重复条目*/
 								noDup=false;
 								break;

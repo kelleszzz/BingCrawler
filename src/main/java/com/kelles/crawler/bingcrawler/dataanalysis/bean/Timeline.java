@@ -8,7 +8,6 @@ import java.util.Set;
 
 import com.kelles.crawler.bingcrawler.database.weightdb.WeightInterface;
 import com.kelles.crawler.bingcrawler.util.*;
-import com.kelles.crawler.bingcrawler.bean.*;
 
 public class Timeline implements Serializable,WeightInterface{
 	
@@ -33,9 +32,9 @@ public class Timeline implements Serializable,WeightInterface{
 			sb.append("[总引用量,平均引用量]\r\n"+totalCitedBy+" , "+totalCitedBy/profileCitedBy.size()+"\r\n");
 		if (totalLinkedCitedBy>0) 
 			sb.append("[(有记录可查询的)引用量,平均引用量]\r\n"+totalLinkedCitedBy+" , "+totalLinkedCitedBy/profiles.size()+"\r\n");
-		if (!profileCitedBy.isEmpty()) sb.append(Utils.formatTopMapStr(profileCitedBy, "年度引用量最高的论文", "次数",topCount));
-		if (!keywordsTotal.isEmpty()) sb.append(Utils.formatTopMapStr(keywordsTotal, "领域相关论文数", "次数",topCount));
-		if (!keywordsTotal.isEmpty()) sb.append(Utils.formatTopMapStr(keywordsTotal, "年度发表论文最多的作者", "次数",topCount));
+		if (!profileCitedBy.isEmpty()) sb.append(Util.formatTopMapStr(profileCitedBy, "年度引用量最高的论文", "次数",topCount));
+		if (!keywordsTotal.isEmpty()) sb.append(Util.formatTopMapStr(keywordsTotal, "领域相关论文数", "次数",topCount));
+		if (!keywordsTotal.isEmpty()) sb.append(Util.formatTopMapStr(keywordsTotal, "年度发表论文最多的作者", "次数",topCount));
 		return sb.toString();
 	}
 

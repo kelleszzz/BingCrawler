@@ -85,7 +85,7 @@ public class DownloadTask implements Serializable{
 				}
 				
 				/*为当前url生成一个html重定向页面*/
-				Utils.generateRedirectHtml(url, toFile.getAbsolutePath(), finalFileName+"");
+				Util.generateRedirectHtml(url, toFile.getAbsolutePath(), finalFileName+"");
 				
 				/*每个url尝试多次*/
 				boolean curLinkSuccess=false;

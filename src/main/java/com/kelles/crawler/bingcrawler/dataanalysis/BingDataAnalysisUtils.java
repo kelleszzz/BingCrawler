@@ -90,7 +90,7 @@ public class BingDataAnalysisUtils {
 				sb=sb4;
 				sb.append(addTimeInterval(startYear,startYear+timeInterval-1));
 				sb.append("\r\n");
-				sb.append(Utils.formatTopMapStr(arg4, null, "论文数",5));
+				sb.append(Util.formatTopMapStr(arg4, null, "论文数",5));
 				sb.append("\r\n");
 				
 				arg1=arg2=arg3=0;

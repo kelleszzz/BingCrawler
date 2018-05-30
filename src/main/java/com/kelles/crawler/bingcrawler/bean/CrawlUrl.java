@@ -8,11 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.kelles.crawler.bingcrawler.util.Md5;
-import com.kelles.crawler.bingcrawler.util.Utils;
-import com.sleepycat.persist.model.Entity;
-import com.sleepycat.persist.model.PrimaryKey;
-import com.sleepycat.persist.model.Relationship;
-import com.sleepycat.persist.model.SecondaryKey;
+import com.kelles.crawler.bingcrawler.util.Util;
 
 public class CrawlUrl implements Serializable{
 	
@@ -95,7 +91,7 @@ public class CrawlUrl implements Serializable{
 	}
 	
 	public CrawlUrl(String url) {
-		this.url = Utils.removeSuffix(url);
+		this.url = Util.removeSuffix(url);
 		if (this.url!=null) this.md5= Md5.get(this.url);
 	}
 	

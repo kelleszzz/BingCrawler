@@ -1,10 +1,7 @@
 package com.kelles.crawler.bingcrawler.database;
 
-import java.io.UnsupportedEncodingException;
-
 import com.kelles.crawler.bingcrawler.download.DownloadTask;
 import com.kelles.crawler.bingcrawler.util.*;
-import com.kelles.crawler.bingcrawler.bean.*;
 import com.sleepycat.bind.serial.SerialBinding;
 import com.sleepycat.je.DatabaseEntry;
 import com.sleepycat.je.SecondaryDatabase;
@@ -25,7 +22,7 @@ public class DownloadTaskWeightKeyCreator  implements SecondaryKeyCreator{
     DatabaseEntry dataEntry,
     DatabaseEntry resultEntry) {
 		DownloadTask task=(DownloadTask) serialBinding.entryToObject(dataEntry);
-		resultEntry.setData(Utils.intToByteArray(task.getWeight()));
+		resultEntry.setData(Util.intToByteArray(task.getWeight()));
 		return true;
 	}
 }

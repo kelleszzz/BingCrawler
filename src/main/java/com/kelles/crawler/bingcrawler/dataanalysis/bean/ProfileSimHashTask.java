@@ -11,9 +11,7 @@ import com.kelles.crawler.bingcrawler.database.weightdb.WeightDbManager;
 import com.kelles.crawler.bingcrawler.threadpool.TaskInterface;
 import org.apache.http.util.TextUtils;
 
-import com.kelles.crawler.bingcrawler.database.weightdb.WeightInterface;
 import com.kelles.crawler.bingcrawler.util.*;
-import com.kelles.crawler.bingcrawler.bean.*;
 import com.sleepycat.je.OperationStatus;
 
 public class ProfileSimHashTask implements TaskInterface,Serializable{
@@ -96,7 +94,7 @@ public class ProfileSimHashTask implements TaskInterface,Serializable{
 		BigInteger result=null;
 		File rootDir=new File(dirPath);
 		if (rootDir.isDirectory()){
-			File profileDir=new File(rootDir,Utils.replaceFileBadLetter(profileAbstract.getTitle()));
+			File profileDir=new File(rootDir, Util.replaceFileBadLetter(profileAbstract.getTitle()));
 			if (profileDir.isDirectory()){
 			String[] fileNames=profileDir.list();
 			if (fileNames!=null)

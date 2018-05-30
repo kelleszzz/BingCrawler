@@ -21,7 +21,7 @@ public class WeightKeyCreator <ValueObjectClass extends WeightInterface> impleme
     DatabaseEntry dataEntry,
     DatabaseEntry resultEntry) {
 		ValueObjectClass obj=(ValueObjectClass) serialBinding.entryToObject(dataEntry);
-		resultEntry.setData(Utils.intToByteArray(obj.getWeight()));
+		resultEntry.setData(Util.intToByteArray(obj.getWeight()));
 		return true;
 	}
 }

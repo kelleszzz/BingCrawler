@@ -23,13 +23,13 @@ public class BingAnalysisUtils {
 	
 	/*是否是必应学术页面*/
 	public static boolean isBingAcademicSearchUrl(java.lang.String url){
-		java.lang.String hostUrl=Utils.getHostUrl(url);
+		java.lang.String hostUrl= Util.getHostUrl(url);
 		if (hostUrl.contains("bing") && url.contains("academic/search")) return true;
 		return false;
 
 	}
 	public static boolean isBingAcademicProfileUrl(java.lang.String url){
-		java.lang.String hostUrl=Utils.getHostUrl(url);
+		java.lang.String hostUrl= Util.getHostUrl(url);
 		if (hostUrl.contains("bing") && url.contains("academic/profile")) return true;
 		return false;
 	}
@@ -39,7 +39,7 @@ public class BingAnalysisUtils {
 	从中获取<a target="_blank" href="http://www.dmi.unict.it/mpavone/nc-cs/materiale/NSGA-II.pdf" h="ID=SERP,5131.1">*/
 	public static List<java.lang.String> analyze_downloads_div(Node divNode){
 		List<java.lang.String> urls=new ArrayList();
-		Node spanNode=Utils.extractOneNodeThatMatch(divNode, new NodeFilter(){
+		Node spanNode= Util.extractOneNodeThatMatch(divNode, new NodeFilter(){
 			@Override
 			public boolean accept(Node arg0) {
 				if (arg0.getText().startsWith("span")
@@ -80,7 +80,7 @@ public class BingAnalysisUtils {
 					//<li>
 					if (childNode.getText().startsWith("li")){
 						//<a href="/academic/search?q=Comparison+of+Multiobjective+Evolutionary+Algorithms%3a+Empirical+Results&amp;mkt=zh-cn" h="ID=morepage.1_1,5025.1">Comparison of Multiobjective Evolutionary Algorithms: Empirical Results</a>
-						Node aNode=Utils.extractOneNodeThatMatch(childNode, new NodeFilter(){
+						Node aNode= Util.extractOneNodeThatMatch(childNode, new NodeFilter(){
 							@Override
 							public boolean accept(Node arg0) {
 								if (arg0.getText().startsWith("a")
@@ -107,10 +107,10 @@ public class BingAnalysisUtils {
 							profile.getPanels().add(authorsPanel);
 						}
 					}
-					else Utils.addChildrenNodesToNodeList(childNode, childrenList);
+					else Util.addChildrenNodesToNodeList(childNode, childrenList);
 				}
 			}
-			else Utils.addChildrenNodesToNodeList(baseNode, baseList);	
+			else Util.addChildrenNodesToNodeList(baseNode, baseList);
 		}
 		return profiles;
 	}
@@ -160,7 +160,7 @@ public class BingAnalysisUtils {
 					panel.addSnippet(snippetNode.toPlainTextString().trim(), url);
 				}
 			}
-			else Utils.addChildrenNodesToNodeList(node,nodeList);
+			else Util.addChildrenNodesToNodeList(node,nodeList);
 		}
 		return panel;
 	}

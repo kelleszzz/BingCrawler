@@ -1,13 +1,11 @@
 package com.kelles.crawler.bingcrawler.database;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import com.kelles.crawler.bingcrawler.download.DownloadTask;
 import com.kelles.crawler.bingcrawler.util.*;
-import com.kelles.crawler.bingcrawler.bean.*;
 import com.sleepycat.je.Cursor;
 import com.sleepycat.je.DatabaseEntry;
 import com.sleepycat.je.LockMode;
@@ -161,7 +159,7 @@ public class DownloadTaskDbManager{
 					byte[] curBytes=foundKey.getData();
 					if (listKeyBytes!=null)
 						for (byte[] existedBytes:listKeyBytes)
-							if (Utils.byteArrayEquals(curBytes, existedBytes)){
+							if (Util.byteArrayEquals(curBytes, existedBytes)){
 								/*出现了重复条目*/
 								noDup=false;
 								break;
@@ -205,7 +203,7 @@ public class DownloadTaskDbManager{
 				if (secCursor.getNext(searchKey,foundKey, foundValue, LockMode.DEFAULT)!=OperationStatus.SUCCESS)
 					return;
 				DownloadTask valueObj=(DownloadTask)db.serialBinding.entryToObject(foundValue);
-				if (!Utils.byteArrayEquals(foundKey.getData(), valueObj.getMd5Bytes())){
+				if (!Util.byteArrayEquals(foundKey.getData(), valueObj.getMd5Bytes())){
 					System.out.println("数据库key: "+new String(foundKey.getData(),"utf-8")); //
 					System.out.println("数据库计算出md5: "+new String(valueObj.getMd5Bytes(),"utf-8")); //
 					System.out.println("数据库task: "+valueObj); //

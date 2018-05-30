@@ -10,7 +10,7 @@
 
     <dependencies>
         <dependency>
-            <artifactId>userserver</artifactId>
+            <artifactId>userserversdk</artifactId>
             <groupId>com.kelles.userserver</groupId>
             <version>1.0-SNAPSHOT</version>
         </dependency>

@@ -1,5 +1,6 @@
 package com.kelles.crawler.bingcrawler.download;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -141,11 +142,13 @@ public class DownloadPool {
 			/*从threads中移除*/
 			for (DownloadThread thread:threads){
 				byte[] threadKeyBytes=thread.getTask().getMd5Bytes();
-				if (Utils.byteArrayEquals(md5Bytes, threadKeyBytes)){
+				if (Util.byteArrayEquals(md5Bytes, threadKeyBytes)){
 					threads.remove(thread);
 					break;
 				}
 			}
+			//TODO 上传到FileServer,并授权给UserServer
+            Util.uploadFileAndGrant(task.getToFile());
 		}
 		tryStart();
 	}
@@ -162,7 +165,7 @@ public class DownloadPool {
 			/*从threads中移除*/
 			for (DownloadThread thread:threads){
 				byte[] threadKeyBytes=thread.getTask().getMd5Bytes();
-				if (Utils.byteArrayEquals(md5Bytes, threadKeyBytes)){
+				if (Util.byteArrayEquals(md5Bytes, threadKeyBytes)){
 					threads.remove(thread);
 					break;
 				}

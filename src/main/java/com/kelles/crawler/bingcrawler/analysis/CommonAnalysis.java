@@ -2,26 +2,18 @@ package com.kelles.crawler.bingcrawler.analysis;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigInteger;
-import java.net.MalformedURLException;
-import java.text.DecimalFormat;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -50,7 +42,6 @@ import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 
@@ -343,9 +334,9 @@ public class CommonAnalysis {
 							if (linkUrl.startsWith("/")) {
 								if (TextUtils.isEmpty(_hostUrl)) return false;
 								linkUrl=_hostUrl+linkUrl;
-								linkUrl=Utils.removeSuffix(linkUrl);
+								linkUrl= Util.removeSuffix(linkUrl);
 							}
-							set.add(Utils.convertHtmlCharEntity(linkUrl));
+							set.add(Util.convertHtmlCharEntity(linkUrl));
 							return true;
 						}
 						return false;
@@ -409,7 +400,7 @@ public class CommonAnalysis {
 				m2.reset(result);
 			}
 			//��"http://www.hacg.fi/wp/23147.html#comment-62755"��ȥ��"#comment-62755"
-			result=Utils.removeSuffix(result); 
+			result= Util.removeSuffix(result);
 			if (suffix!=null) result+="."+suffix;
 			return result;
 		}

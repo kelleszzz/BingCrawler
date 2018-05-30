@@ -34,7 +34,7 @@ public class DbManager<ValueObjectClass>{
 			manager.put(u5.getUrl().getBytes("utf-8"),u5);
 			manager.delete(u2.getUrl().getBytes("utf-8"));
 			
-			/*DatabaseEntry searchKey=new DatabaseEntry(Utils.intToByteArray(100));
+			/*DatabaseEntry searchKey=new DatabaseEntry(Util.intToByteArray(100));
 			DatabaseEntry foundKey = new DatabaseEntry();
             DatabaseEntry foundValue = new DatabaseEntry();*/
 //			manager.describe();

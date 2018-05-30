@@ -44,7 +44,7 @@ public class BingAnalysis {
 //		html=seleniumGetBingAcademicProfileHtml("http://cn.bing.com/academic/profile?id=2126105956&encoded=0&v=paper_preview&mkt=zh-cn#",driver);
 		html=seleniumGetBingAcademicProfileHtml("http://cn.bing.com/academic/profile?id=2340633806&encoded=0&v=paper_preview&mkt=zh-cn", driver);
 //		html=seleniumGetBingAcademicProfileHtml("https://www.bing.com/academic/profile?id=2064920134&encoded=0&v=paper_preview&mkt=zh-cn", driver);
-		if (html!=null) CommonAnalysis.strToFile(Utils.htmlFormatting(html),"BingAnalysisTest","BingAnalysis.html");
+		if (html!=null) CommonAnalysis.strToFile(Util.htmlFormatting(html),"BingAnalysisTest","BingAnalysis.html");
 		Profile profile=analyzeBingAcademicProfile(html);
 		System.out.println("[分析出Profile]\n"+profile);
 		//关闭这个浏览器
@@ -79,7 +79,7 @@ public class BingAnalysis {
 							b_hPanel panel=BingAnalysisUtils.analyze_b_hPanel(panelNode);
 							profile.getPanels().add(panel);
 						}
-						else Utils.addChildrenNodesToNodeList(panelNode,panelList);
+						else Util.addChildrenNodesToNodeList(panelNode,panelList);
 					}
 				}
 				/*<li id="acapp_papers">
@@ -105,7 +105,7 @@ public class BingAnalysis {
 									BingAnalysisUtils.analyze_aca_paper(paperNode);
 							profile.getCitedPapers().addAll(citedPapersProfiles);
 						}
-						else Utils.addChildrenNodesToNodeList(paperNode, papersList);
+						else Util.addChildrenNodesToNodeList(paperNode, papersList);
 					}
 				}
 				/*<div class="aca_source">
@@ -127,7 +127,7 @@ public class BingAnalysis {
 									if (Constant.Download.equals(liNode.toPlainTextString().trim())) hasDownload=true;
 									else if (Constant.Source.equals(liNode.toPlainTextString().trim())) hasSource=true;
 								}
-								else Utils.addChildrenNodesToNodeList(liNode, liList);
+								else Util.addChildrenNodesToNodeList(liNode, liList);
 							}
 						}
 						/*<div id="tab_1_3C78B5" data-appns="SERP" data-k="5135.1" class="" style="transition: opacity 0.3s linear; opacity: 1;">
@@ -150,10 +150,10 @@ public class BingAnalysis {
 							List<java.lang.String> sourceUrls=BingAnalysisUtils.analyze_downloads_div(itemsNode);
 							profile.getSourceUrls().addAll(sourceUrls);
 						}
-						else Utils.addChildrenNodesToNodeList(itemsNode, itemsList);
+						else Util.addChildrenNodesToNodeList(itemsNode, itemsList);
 					}
 				}
-				else Utils.addChildrenNodesToNodeList(baseNode,baseList);
+				else Util.addChildrenNodesToNodeList(baseNode,baseList);
 			}
 			return profile;
 		}
@@ -330,7 +330,7 @@ public class BingAnalysis {
 															/*会议*/
 															journal=rawPart2;
 															final java.lang.String _journal=journal;
-															Node journalUrlNode=Utils.extractOneNodeThatMatch(snippetNode, new NodeFilter(){
+															Node journalUrlNode= Util.extractOneNodeThatMatch(snippetNode, new NodeFilter(){
 																@Override
 																public boolean accept(Node arg0) {
 																	if (arg0.getText().startsWith("a") && arg0.toPlainTextString().trim().equals("_journal"))
@@ -389,14 +389,14 @@ public class BingAnalysis {
 													}
 													panel.addSnippet(keyword, keywordUrl);
 												}
-												else Utils.addChildrenNodesToNodeList(aNode, aList);
+												else Util.addChildrenNodesToNodeList(aNode, aList);
 											}
 											paperProfile.getPanels().add(panel);
 										}
-										else Utils.addChildrenNodesToNodeList(snippetNode, snippetsList);
+										else Util.addChildrenNodesToNodeList(snippetNode, snippetsList);
 									}
 								}
-								else Utils.addChildrenNodesToNodeList(detailNode, nodeList);
+								else Util.addChildrenNodesToNodeList(detailNode, nodeList);
 							}
 							paperProfiles.add(paperProfile);
 						}

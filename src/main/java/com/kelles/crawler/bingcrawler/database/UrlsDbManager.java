@@ -1,36 +1,21 @@
 package com.kelles.crawler.bingcrawler.database;
 
 
-import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import com.kelles.crawler.bingcrawler.util.*;
 import com.kelles.crawler.bingcrawler.bean.*;
-import com.sleepycat.bind.serial.ClassCatalog;
-import com.sleepycat.bind.serial.SerialBinding;
-import com.sleepycat.bind.serial.StoredClassCatalog;
 import com.sleepycat.je.Cursor;
-import com.sleepycat.je.Database;
-import com.sleepycat.je.DatabaseConfig;
 import com.sleepycat.je.DatabaseEntry;
-import com.sleepycat.je.Environment;
-import com.sleepycat.je.EnvironmentConfig;
 import com.sleepycat.je.LockMode;
 import com.sleepycat.je.OperationStatus;
 import com.sleepycat.je.SecondaryCursor;
 import com.sleepycat.je.Transaction;
-import com.sleepycat.persist.EntityCursor;
-import com.sleepycat.persist.EntityStore;
-import com.sleepycat.persist.PrimaryIndex;
-import com.sleepycat.persist.SecondaryIndex;
-import com.sleepycat.persist.StoreConfig;
-import com.sleepycat.persist.impl.Store;
 
 
 public class UrlsDbManager {
@@ -54,7 +39,7 @@ public class UrlsDbManager {
 			VersionUtils.log("获取weight最高的条目:\n"+manager.getNextCrawlUrl());
 			
 			SecondaryCursor secCursor=manager.db.todoUrlsByWeight.openSecondaryCursor(null, null);
-			DatabaseEntry searchKey=new DatabaseEntry(Utils.intToByteArray(100));
+			DatabaseEntry searchKey=new DatabaseEntry(Util.intToByteArray(100));
 			DatabaseEntry foundKey = new DatabaseEntry();
             DatabaseEntry foundValue = new DatabaseEntry();
             VersionUtils.log("遍历weightSecDb的条目");

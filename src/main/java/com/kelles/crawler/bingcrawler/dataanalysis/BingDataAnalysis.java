@@ -279,7 +279,7 @@ public class BingDataAnalysis {
 					boolean timelineCreated=false;
 					Timeline timeline=null;
 					int year=Integer.parseInt(profile.getYear());
-					timeline=timelineManager.get(Utils.intToByteArray(year));
+					timeline=timelineManager.get(Util.intToByteArray(year));
 					if (timeline==null) {
 						/*不存在则创建新timeline*/
 						timeline=new Timeline(year);
@@ -290,11 +290,11 @@ public class BingDataAnalysis {
 						/*导出数据到时间线中*/
 						BingDataAnalysisUtils.exportTimeline(timeline, profile);
 						if (timelineCreated) {
-							timelineManager.put(Utils.intToByteArray(timeline.getYear()), timeline);
+							timelineManager.put(Util.intToByteArray(timeline.getYear()), timeline);
 //							VersionUtils.log("添加了时间线"+timeline.getYear()+",作品"+profile.getTitle()); //
 						}
 						else {
-							timelineManager.update(Utils.intToByteArray(timeline.getYear()), timeline);
+							timelineManager.update(Util.intToByteArray(timeline.getYear()), timeline);
 //							VersionUtils.log("更新了时间线"+timeline.getYear()+",作品"+profile.getTitle()); //
 						}
 					}
