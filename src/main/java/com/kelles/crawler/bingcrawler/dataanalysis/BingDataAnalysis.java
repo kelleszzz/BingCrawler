@@ -98,7 +98,7 @@ public class BingDataAnalysis {
 	public void analyzeData(){
 		/*爬取论文数*/
 		if (analyzeCrawledCount){
-			VersionUtils.log("[爬取论文数]"); //
+			Logger.log("[爬取论文数]"); //
 			StringBuilder sb=new StringBuilder();
 			sb.append("[爬取的链接数]\r\n"+urlsManager.sizeUniUrls()+"\r\n");
 			sb.append("[分析的论文数]\r\n"+profilesManager.size()+"\r\n");
@@ -108,7 +108,7 @@ public class BingDataAnalysis {
 		/*时间线*/
 		if (analyzeTimeline){
 			try{
-				VersionUtils.log("[时间线分析]"); //
+				Logger.log("[时间线分析]"); //
 				List<Timeline> timelineGroup=timelineManager.getNext(Integer.MAX_VALUE);
 				/*整体时间线分析*/
 				BingDataAnalysisUtils.analyzeTimelineTotalAnalysis(timelineGroup); 
@@ -124,7 +124,7 @@ public class BingDataAnalysis {
 		/*论文排序*/
 		if (analyzeProfiles){
 			try{
-				VersionUtils.log("[论文排序]"); //
+				Logger.log("[论文排序]"); //
 				java.lang.String result=null;
 				result=BingDataAnalysisUtils.analyzeProfiles(profilesCitedByManager, null ,topCount);
 				CommonAnalysis.strToFile(result, Setting.ROOT+ Setting.DATA_ANALYSIS+"/论文排序", "引用数最高的论文.txt");
@@ -137,7 +137,7 @@ public class BingDataAnalysis {
 		/*作者(期刊会议依赖作者,关键词依赖作者)*/
 		if (analyzeAuthors||analyzeJournals||analyzeKeywords){
 			try{
-				VersionUtils.log("[作者分析]"); //
+				Logger.log("[作者分析]"); //
 				/*按爬取的该作者的论文总数排序*/
 				StringBuilder sb=new StringBuilder();
 				List<Author> topAuthors=authorsManager.getNext(topCount);
@@ -150,7 +150,7 @@ public class BingDataAnalysis {
 						sb.append("====================TOP "+(++topCur)+"====================\r\n");
 						sb.append(author+"\r\n\r\n");
 					}
-//					VersionUtils.log(sb.toString());//
+//					Logger.log(sb.toString());//
 					CommonAnalysis.strToFile(sb.toString(), Setting.ROOT+ Setting.DATA_ANALYSIS, "影响力最高的作者.txt");
 				}
 			}catch(Exception e){e.printStackTrace();}
@@ -158,7 +158,7 @@ public class BingDataAnalysis {
 		/*关键词(期刊会议依赖关键词,分析顺序必须在作者之后)*/
 		if (analyzeKeywords||analyzeJournals){
 			try{
-				VersionUtils.log("[关键词分析]"); //
+				Logger.log("[关键词分析]"); //
 				/*按爬取的该关键词的论文总数排序*/
 				StringBuilder sb=new StringBuilder();
 				List<Keyword> topKeywords=keywordsManager.getNext(topCount);
@@ -171,7 +171,7 @@ public class BingDataAnalysis {
 						sb.append("====================TOP "+(++topCur)+"====================\r\n");
 						sb.append(keyword+"\r\n\r\n");
 					}
-//					VersionUtils.log(sb.toString());//
+//					Logger.log(sb.toString());//
 					CommonAnalysis.strToFile(sb.toString(), Setting.ROOT+ Setting.DATA_ANALYSIS, "人工智能领域.txt");
 				}
 			}catch(Exception e){e.printStackTrace();}
@@ -179,7 +179,7 @@ public class BingDataAnalysis {
 		/*期刊会议(分析顺序必须在依赖项之后)*/
 		if (analyzeJournals){
 			try{
-				VersionUtils.log("[期刊会议分析]"); //
+				Logger.log("[期刊会议分析]"); //
 				StringBuilder sb=new StringBuilder();
 				List<Journal> topJournals=journalsManager.getNext(topCount);
 				if (topJournals!=null){
@@ -191,7 +191,7 @@ public class BingDataAnalysis {
 						sb.append("====================TOP "+(++topCur)+"====================\r\n");
 						sb.append(journal+"\r\n\r\n");
 					}
-//					VersionUtils.log(sb.toString());//
+//					Logger.log(sb.toString());//
 					CommonAnalysis.strToFile(sb.toString(), Setting.ROOT+ Setting.DATA_ANALYSIS, "期刊会议.txt");
 				}
 			}catch(Exception e){e.printStackTrace();}
@@ -199,7 +199,7 @@ public class BingDataAnalysis {
 		/*SimHash分析*/
 		if (analyzeSimHash){
 			try{
-				VersionUtils.log("[论文相似度分析]"); //
+				Logger.log("[论文相似度分析]"); //
 				/*等待所有SimHash被计算出*/
 				for (int accumulated=0,previousCount=-1;;accumulated++){
 					int currentThreadCount=simHashAnalysis.currentThreadCount();
@@ -224,7 +224,7 @@ public class BingDataAnalysis {
 						}
 						/*至少含有摘要*/
 						if (profileSimHash.getSimHash()==null) continue; 
-						VersionUtils.log("[相似度分析]"+profileSimHash.getTitle()); //
+						Logger.log("[相似度分析]"+profileSimHash.getTitle()); //
 						sb.append("====================TOP "+(++topCur)+"====================\r\n");
 						sb.append(profileSimHash+"\r\n\r\n");
 					}
@@ -271,7 +271,7 @@ public class BingDataAnalysis {
 	/*导出单个Profile数据*/
 	private static int profilesCount=0;
 	private void exportProfile(Profile profile){
-		VersionUtils.log("[导出第"+(++profilesCount)+"个作品数据]"+profile.getTitle()); //
+		Logger.log("[导出第"+(++profilesCount)+"个作品数据]"+profile.getTitle()); //
 		/*整体时间线*/
 		if (analyzeTimeline){
 			try {
@@ -291,11 +291,11 @@ public class BingDataAnalysis {
 						BingDataAnalysisUtils.exportTimeline(timeline, profile);
 						if (timelineCreated) {
 							timelineManager.put(Util.intToByteArray(timeline.getYear()), timeline);
-//							VersionUtils.log("添加了时间线"+timeline.getYear()+",作品"+profile.getTitle()); //
+//							Logger.log("添加了时间线"+timeline.getYear()+",作品"+profile.getTitle()); //
 						}
 						else {
 							timelineManager.update(Util.intToByteArray(timeline.getYear()), timeline);
-//							VersionUtils.log("更新了时间线"+timeline.getYear()+",作品"+profile.getTitle()); //
+//							Logger.log("更新了时间线"+timeline.getYear()+",作品"+profile.getTitle()); //
 						}
 					}
 				}
@@ -351,11 +351,11 @@ public class BingDataAnalysis {
 						author.setWeight(author.getProfiles().size()); 
 						if (authorCreated) {
 							authorsManager.put(author.getName().getBytes("utf-8"), author);
-//							VersionUtils.log("添加了作者"+author.getName()+",作品"+profile.getTitle()); //
+//							Logger.log("添加了作者"+author.getName()+",作品"+profile.getTitle()); //
 						}
 						else {
 							authorsManager.update(author.getName().getBytes("utf-8"), author);
-//							VersionUtils.log("更新了作者"+author.getName()+",作品"+profile.getTitle()); //
+//							Logger.log("更新了作者"+author.getName()+",作品"+profile.getTitle()); //
 						}
 					}
 				}
@@ -381,11 +381,11 @@ public class BingDataAnalysis {
 						keyword.setWeight(keyword.getProfiles().size());
 						if (keywordCreated) {
 							keywordsManager.put(keyword.getName().getBytes("utf-8"), keyword);
-//							VersionUtils.log("添加了关键词"+keyword.getName()+",作品"+profile.getTitle()); //
+//							Logger.log("添加了关键词"+keyword.getName()+",作品"+profile.getTitle()); //
 						}
 						else {
 							keywordsManager.update(keyword.getName().getBytes("utf-8"), keyword);
-//							VersionUtils.log("更新了关键词"+keyword.getName()+",作品"+profile.getTitle()); //
+//							Logger.log("更新了关键词"+keyword.getName()+",作品"+profile.getTitle()); //
 						}
 					}
 				}
@@ -412,11 +412,11 @@ public class BingDataAnalysis {
 						journal.setWeight(journal.getProfiles().size()); 
 						if (journalCreated) {
 							journalsManager.put(journal.getName().getBytes("utf-8"), journal);
-//							VersionUtils.log("添加了期刊会议"+journal.getName()+",作品"+profile.getTitle()); //
+//							Logger.log("添加了期刊会议"+journal.getName()+",作品"+profile.getTitle()); //
 						}
 						else {
 							journalsManager.update(journal.getName().getBytes("utf-8"), journal);
-//							VersionUtils.log("更新了期刊会议"+journal.getName()+",作品"+profile.getTitle()); //
+//							Logger.log("更新了期刊会议"+journal.getName()+",作品"+profile.getTitle()); //
 						}
 					}
 				}

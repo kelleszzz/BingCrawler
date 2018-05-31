@@ -47,8 +47,8 @@ public class DownloadTask implements Serializable{
 				.addUrl("http://people.csail.mit.edu/matei/courses/2015/6.S897/readings/above-the-clouds.pdf")
 				.addUrl("http://www.unf.edu/~sahuja/cis6302/AViewofCloudComputing.pdf")
 				.build();
-		if (task.startDownload()) VersionUtils.log("下载完成");
-		else VersionUtils.log("下载失败");
+		if (task.startDownload()) Logger.log("下载完成");
+		else Logger.log("下载失败");
 	}
 	
 	/*获得DownloadTask的byte[]值,用于数据库的key*/
@@ -157,7 +157,7 @@ public class DownloadTask implements Serializable{
 	    	return false;
 	    }
 	    catch(Exception e){
-	    	VersionUtils.log("[下载异常Url]"+url+"\n[下载异常文件]"+toFile.getName());
+	    	Logger.log("[下载异常Url]"+url+"\n[下载异常文件]"+toFile.getName());
         	e.printStackTrace();
         	return false;
         }

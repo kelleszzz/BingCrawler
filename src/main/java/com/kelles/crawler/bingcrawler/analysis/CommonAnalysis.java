@@ -147,7 +147,7 @@ public class CommonAnalysis {
 	            httpGet.setConfig(requestConfig);
 	            CloseableHttpResponse response1 = httpclient.execute(httpGet);
 	            try {
-	            	VersionUtils.log(response1.getStatusLine());
+	            	Logger.log(response1.getStatusLine());
 	                if (ifRedirect(response1.getStatusLine().getStatusCode())) {
 	                	//重定向
 	                	Header[] headers=response1.getHeaders("location");
@@ -198,7 +198,7 @@ public class CommonAnalysis {
 	//��ʾ��ҳ������Header
 	private static void showHeaders(Header[] headers){
 		for (Header header:headers){
-			VersionUtils.log(header.getName()+" : "+header.getValue());
+			Logger.log(header.getName()+" : "+header.getValue());
 		}
 	}
 	
@@ -225,7 +225,7 @@ public class CommonAnalysis {
 
 	//通过html文本获取正文内容
 	public static String getContent(String html){
-//		VersionUtils.log(11.15,"准备提取正文,charset为"+charset+",html为:\n"+html);
+//		Logger.log(11.15,"准备提取正文,charset为"+charset+",html为:\n"+html);
 		try {
 			if (TextUtils.isEmpty(html)) return null;
 			String content = ContentExtractor.getContentByHtml(html);
@@ -264,8 +264,8 @@ public class CommonAnalysis {
 						showNodeInfo(node);
 						String str=new String("");
 						for (String torrent:torrentList) str+=torrent+"\n";
-						VersionUtils.log("分析到种子:\n"+str+"["+(str.length()-1)+"]");
-						VersionUtils.log("===============================================\n");
+						Logger.log("分析到种子:\n"+str+"["+(str.length()-1)+"]");
+						Logger.log("===============================================\n");
 					}
 				}
 			}
@@ -298,7 +298,7 @@ public class CommonAnalysis {
 			}
 			for (int i=0;i<torrentList.size();i++){
 				if (torrentList.get(i).length()!=40) {
-//					VersionUtils.log(11.15,"移除非种子格式的"+torrentList.get(i));
+//					Logger.log(11.15,"移除非种子格式的"+torrentList.get(i));
 					torrentList.remove(i--);
 				}
 			}
@@ -366,7 +366,7 @@ public class CommonAnalysis {
 			str+="[node.getText()]\n"+node.getText()+"\n";
 			str+="[node.toPlainTextString()]\n"+node.toPlainTextString()+"\n";
 			str+="[node.toHtml()]\n"+node.toHtml()+"\n";
-			VersionUtils.log(str);
+			Logger.log(str);
 		}
 
 		public static void showNodesInfo(String html){

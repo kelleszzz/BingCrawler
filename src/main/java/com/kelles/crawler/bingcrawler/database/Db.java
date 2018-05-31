@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Set;
 
 import com.kelles.crawler.bingcrawler.util.*;
-import com.kelles.crawler.bingcrawler.bean.*;
 import com.sleepycat.bind.serial.SerialBinding;
 import com.sleepycat.bind.serial.StoredClassCatalog;
 import com.sleepycat.je.Cursor;
@@ -19,10 +18,7 @@ import com.sleepycat.je.Environment;
 import com.sleepycat.je.EnvironmentConfig;
 import com.sleepycat.je.LockMode;
 import com.sleepycat.je.OperationStatus;
-import com.sleepycat.je.SecondaryConfig;
 import com.sleepycat.je.SecondaryDatabase;
-import com.sleepycat.je.SecondaryKeyCreator;
-import com.sleepycat.je.Transaction;
 import com.sleepycat.je.TransactionConfig;
 
 public class Db{
@@ -107,10 +103,10 @@ public class Db{
 	}
 	
 	public void describe(){
-		if (VersionUtils.check(1)){
-			VersionUtils.log("数据库路径: "+env.getHome().getAbsolutePath());
+		if (Logger.check(1)){
+			Logger.log("数据库路径: "+env.getHome().getAbsolutePath());
 			List<String> dbNames=env.getDatabaseNames();
-			VersionUtils.log("数据库名: "+dbNames);
+			Logger.log("数据库名: "+dbNames);
 		}
 		describeDb(mainDb);
 	}
@@ -118,16 +114,16 @@ public class Db{
 	private void describeDb(Database db){
 		Cursor cursor=null;
 		try{
-			VersionUtils.log("数据库"+db.getDatabaseName()+"包含Url:");
+			Logger.log("数据库"+db.getDatabaseName()+"包含Url:");
 			cursor=db.openCursor(null, null);
 			DatabaseEntry key=new DatabaseEntry();
 			DatabaseEntry value=new DatabaseEntry();
 			int i=0;
 			while (cursor.getNext(key, value, LockMode.DEFAULT)==OperationStatus.SUCCESS){
 				try {
-					VersionUtils.log("["+(++i)+"]"+"key = "+new String(key.getData(),"utf-8"));
+					Logger.log("["+(++i)+"]"+"key = "+new String(key.getData(),"utf-8"));
 				} catch (UnsupportedEncodingException e) {}
-				VersionUtils.log("value = "+serialBinding.entryToObject(value));
+				Logger.log("value = "+serialBinding.entryToObject(value));
 			};
 		}
 		finally{

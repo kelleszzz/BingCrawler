@@ -72,10 +72,10 @@ public class ProfileSimHashTask implements TaskInterface,Serializable{
 				for (String keyword:keywords) sb.append(keyword+" ");
 			}
 			result=TextAnalysis.getSimHash(sb.toString());
-			VersionUtils.log("[摘要获得]"+profileAbstract.getTitle()); //
+			Logger.log("[摘要获得]"+profileAbstract.getTitle()); //
 		}
 		if (disturbed>0){
-//			VersionUtils.log("混淆前:"+result.toString(2)); //
+//			Logger.log("混淆前:"+result.toString(2)); //
 			if (disturbed>TextAnalysis.totalBits) disturbed=TextAnalysis.totalBits;
 			for (int i=0;i<disturbed;i++){
 				/*随机改变bit*/
@@ -84,7 +84,7 @@ public class ProfileSimHashTask implements TaskInterface,Serializable{
 				BigInteger mask=(ifChange?BigInteger.ONE:BigInteger.ZERO).shiftLeft(i);
 				result=result.xor(mask);
 			}
-//			VersionUtils.log("混淆后:"+result.toString(2)); //
+//			Logger.log("混淆后:"+result.toString(2)); //
 		}
 		return result;
 	}
@@ -106,7 +106,7 @@ public class ProfileSimHashTask implements TaskInterface,Serializable{
 							String rawContent=PdfBox.get(pdfFile);
 							if (!TextUtils.isEmpty(rawContent)){
 								result=TextAnalysis.getSimHash(rawContent);
-								VersionUtils.log("[pdf获得]"+profileAbstract.getTitle()); //
+								Logger.log("[pdf获得]"+profileAbstract.getTitle()); //
 								break;
 							}
 						}

@@ -54,15 +54,15 @@ public class WaitForWebElementToChange {
 				@Override
 				public Boolean apply(WebDriver driver) {
 					String curText=getCurText();
-//					VersionUtils.log(11.26,"[此刻内容]\n"+curText); //
+//					Logger.log(11.26,"[此刻内容]\n"+curText); //
 					//无法找到Element
 					if (originalText==null || curText==null) {
-//						VersionUtils.log(11.26,"[无法找到]\n");//
+//						Logger.log(11.26,"[无法找到]\n");//
 						return Boolean.FALSE;
 					}
 					//内容改变
 					else if (originalText!=null && curText!=null && !originalText.equals(curText)){
-//						VersionUtils.log(11.26,"[内容改变]\n"+curText);//
+//						Logger.log(11.26,"[内容改变]\n"+curText);//
 						return Boolean.TRUE;
 					}
 					else throw new NoSuchElementException("");

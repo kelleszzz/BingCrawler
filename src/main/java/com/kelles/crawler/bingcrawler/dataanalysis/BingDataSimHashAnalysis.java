@@ -35,7 +35,7 @@ public class BingDataSimHashAnalysis {
 		WeightDbManager<ProfileSimHash> simHashManager=new WeightDbManager<ProfileSimHash>(BINGDATAANALYSIS_SIMHASHMANAGER_PATH,ProfileSimHash.class);
 		BingDataSimHashAnalysis analysis=new BingDataSimHashAnalysis(profilesManager,simHashManager);
 		
-		VersionUtils.log("[条目数]"+simHashManager.size()); //
+		Logger.log("[条目数]"+simHashManager.size()); //
 		
 		analysis.exportData();
 		analysis.simHashPool.tryStart();
@@ -49,7 +49,7 @@ public class BingDataSimHashAnalysis {
 			}
 			else if (currentThreadCount<0) break;
 			else{
-				VersionUtils.log("[等待SimHash计算完]"+currentThreadCount);
+				Logger.log("[等待SimHash计算完]"+currentThreadCount);
 			}
 		}
 		analysis.close();
@@ -89,7 +89,7 @@ public class BingDataSimHashAnalysis {
 		/*SimHash分析*/
 		try{
 			if (simHashManager.get(profile.getTitle().getBytes("utf-8"))==null){
-				VersionUtils.log("[导出第"+profilesCount+"个SimHash]"); //
+				Logger.log("[导出第"+profilesCount+"个SimHash]"); //
 				ProfileSimHashTask task=new ProfileSimHashTask(new ProfileAbstract(profile));
 				simHashPool.addTask(task);
 			}

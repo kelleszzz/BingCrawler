@@ -55,7 +55,7 @@ public class DbManager<ValueObjectClass>{
 	private void setup(){
 		if (db==null) {
 			db=new Db(homePath,objCls,allowDuplicates);
-			VersionUtils.log(11.14,"加载DbManager["+homePath+"]");
+			Logger.log(11.14,"加载DbManager["+homePath+"]");
 		}
 	}
 	public void close(){

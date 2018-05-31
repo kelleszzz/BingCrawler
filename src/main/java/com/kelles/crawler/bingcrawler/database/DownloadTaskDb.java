@@ -1,14 +1,12 @@
 package com.kelles.crawler.bingcrawler.database;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import com.kelles.crawler.bingcrawler.download.DownloadTask;
 import com.kelles.crawler.bingcrawler.util.*;
-import com.kelles.crawler.bingcrawler.bean.*;
 import com.sleepycat.bind.serial.SerialBinding;
 import com.sleepycat.bind.serial.StoredClassCatalog;
 import com.sleepycat.je.Cursor;
@@ -23,7 +21,6 @@ import com.sleepycat.je.OperationStatus;
 import com.sleepycat.je.SecondaryConfig;
 import com.sleepycat.je.SecondaryDatabase;
 import com.sleepycat.je.SecondaryKeyCreator;
-import com.sleepycat.je.Transaction;
 import com.sleepycat.je.TransactionConfig;
 
 public class DownloadTaskDb{
@@ -125,10 +122,10 @@ public class DownloadTaskDb{
 	}
 	
 	public void describe(){
-		if (VersionUtils.check(1)){
-			VersionUtils.log("数据库路径: "+env.getHome().getAbsolutePath());
+		if (Logger.check(1)){
+			Logger.log("数据库路径: "+env.getHome().getAbsolutePath());
 			List<String> dbNames=env.getDatabaseNames();
-			VersionUtils.log("数据库名: "+dbNames);
+			Logger.log("数据库名: "+dbNames);
 		}
 		describeDb(mainDb);
 	}
@@ -136,14 +133,14 @@ public class DownloadTaskDb{
 	private void describeDb(Database db){
 		Cursor cursor=null;
 		try{
-			VersionUtils.log("数据库"+db.getDatabaseName()+"包含Url:");
+			Logger.log("数据库"+db.getDatabaseName()+"包含Url:");
 			cursor=db.openCursor(null, null);
 			DatabaseEntry key=new DatabaseEntry();
 			DatabaseEntry value=new DatabaseEntry();
 			int i=0;
 			while (cursor.getNext(key, value, LockMode.DEFAULT)==OperationStatus.SUCCESS){
-				VersionUtils.log("["+(++i)+"]"+"key = "+new String(key.getData(),"utf-8"));
-				VersionUtils.log("value = "+serialBinding.entryToObject(value));
+				Logger.log("["+(++i)+"]"+"key = "+new String(key.getData(),"utf-8"));
+				Logger.log("value = "+serialBinding.entryToObject(value));
 			};
 		}
 		catch(Exception e){

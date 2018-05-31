@@ -1,15 +1,13 @@
 package com.kelles.crawler.bingcrawler.database.weightdb;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.kelles.crawler.bingcrawler.util.VersionUtils;
+import com.kelles.crawler.bingcrawler.util.Logger;
 import com.sleepycat.bind.serial.SerialBinding;
 import com.sleepycat.bind.serial.StoredClassCatalog;
-import com.sleepycat.je.Cursor;
 import com.sleepycat.je.Database;
 import com.sleepycat.je.DatabaseConfig;
 import com.sleepycat.je.DatabaseEntry;
@@ -125,10 +123,10 @@ public class WeightDb <ValueObjectClass extends WeightInterface>{
 	}
 	
 	public void describe(){
-		if (VersionUtils.check(1)){
-			VersionUtils.log("数据库路径: "+env.getHome().getAbsolutePath());
+		if (Logger.check(1)){
+			Logger.log("数据库路径: "+env.getHome().getAbsolutePath());
 			List<String> dbNames=env.getDatabaseNames();
-			VersionUtils.log("数据库名: "+dbNames);
+			Logger.log("数据库名: "+dbNames);
 		}
 		describeDb(mainDb);
 	}
@@ -144,8 +142,8 @@ public class WeightDb <ValueObjectClass extends WeightInterface>{
 			if (secCursor.getLast(searchKey,foundKey, foundValue, LockMode.DEFAULT)==OperationStatus.SUCCESS){
 				for (int i=0;;){
 					ValueObjectClass valueObj=(ValueObjectClass)serialBinding.entryToObject(foundValue);
-					VersionUtils.log("["+(++i)+"]"+"key = "+new String(foundKey.getData(),"utf-8"));
-					VersionUtils.log("value = "+serialBinding.entryToObject(foundValue));
+					Logger.log("["+(++i)+"]"+"key = "+new String(foundKey.getData(),"utf-8"));
+					Logger.log("value = "+serialBinding.entryToObject(foundValue));
 					OperationStatus retVal=secCursor.getPrev(searchKey,foundKey, foundValue, LockMode.DEFAULT);
 					if (retVal!=OperationStatus.SUCCESS) break;
 				}

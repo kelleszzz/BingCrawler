@@ -1,6 +1,5 @@
 package com.kelles.crawler.bingcrawler.download;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -66,7 +65,7 @@ public class DownloadPool {
 					return;
 				}
 				else for (DownloadThread thread:threads)
-					VersionUtils.log("[等待下载结束]"+thread.getTask().getToFile().getName());
+					Logger.log("[等待下载结束]"+thread.getTask().getToFile().getName());
 			}
 			new Thread(new Runnable(){
 				@Override
@@ -75,7 +74,7 @@ public class DownloadPool {
 						try {Thread.sleep(500);} catch (InterruptedException e) {e.printStackTrace();}
 						synchronized (mutex){
 							if (threads.size()==0) {
-//								VersionUtils.log(11.27,"线程池"+manager.getHomePath()+"关闭");
+//								Logger.log(11.27,"线程池"+manager.getHomePath()+"关闭");
 								manager.close();
 								manager=null;
 								return;
@@ -134,7 +133,7 @@ public class DownloadPool {
 	private void taskSuccess(DownloadTask task){
 		byte[] md5Bytes=task.getMd5Bytes(); 
 		synchronized(mutex){
-			VersionUtils.log(11.27,"[下载完成]"+task.getToFile().getName()); //
+			Logger.log(11.27,"[下载完成]"+task.getToFile().getName()); //
 			 /*从数据库中移除该任务*/
 			if (manager.delete(md5Bytes)!=OperationStatus.SUCCESS){
 				throw new RuntimeException("[文件已下载,但未从数据库中正确移除]"+task.getToFile().getName());
@@ -157,7 +156,7 @@ public class DownloadPool {
 	private void taskFailure(DownloadTask task){
 		byte[] md5Bytes=task.getMd5Bytes(); 
 		synchronized(mutex){
-			VersionUtils.log(11.27,"[下载失败]"+task.getToFile().getName()); //
+			Logger.log(11.27,"[下载失败]"+task.getToFile().getName()); //
 			/*从数据库中降低该任务优先级*/
 			if (manager.updateWeight(md5Bytes, task.getWeight()-1)!=OperationStatus.SUCCESS){
 				throw new RuntimeException("[文件下载失败,且未从数据库中正确降低优先级]"+task.getToFile().getName());
@@ -180,7 +179,7 @@ public class DownloadPool {
 
 		@Override
 		public void run() {
-			VersionUtils.log("[开始下载]"+task.getToFile().getName()); //
+			Logger.log("[开始下载]"+task.getToFile().getName()); //
 			if (task.startDownload()) taskSuccess(task); //下载完成
 			else taskFailure(task); //下载失败
 		}

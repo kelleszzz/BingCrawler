@@ -67,7 +67,7 @@ public class DownloadTaskDbManager{
 	private void setup(){
 		if (db==null) {
 			db=new DownloadTaskDb(homePath);
-			VersionUtils.log(11.14,"加载DbManager["+homePath+"]");
+			Logger.log(11.14,"加载DbManager["+homePath+"]");
 		}
 	}
 	public void close(){

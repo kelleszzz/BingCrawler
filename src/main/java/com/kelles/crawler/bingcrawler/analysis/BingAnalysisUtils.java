@@ -183,20 +183,20 @@ public class BingAnalysisUtils {
 			}
 			catch(NoSuchElementException e){}
 			//加载更多
-//			VersionUtils.log(11.26,"[Download默认版面加载更多]"); //
+//			Logger.log(11.26,"[Download默认版面加载更多]"); //
 			downloadsLoadMoreSml(aca_source);
 			if (hasDownload && hasSource){
 				//切换Tab至Source
-//				VersionUtils.log(11.26,"[切换Tab至Source]"); //
+//				Logger.log(11.26,"[切换Tab至Source]"); //
 				wait=WaitForWebElementToChange.newInstance(driver, By.className("aca_source"));
 				downloadsLoadMoreTab(aca_source, Constant.Source);
 					wait.waitForChange(1000);
 				aca_source=driver.findElement(By.className("aca_source")); //重新加载一次aca_source
 				//加载更多
-//				VersionUtils.log(11.26,"[Source版面加载更多]"); //
+//				Logger.log(11.26,"[Source版面加载更多]"); //
 				downloadsLoadMoreSml(aca_source);
 				//切换回Download
-//				VersionUtils.log(11.26,"[切换Tab回Download]"); //
+//				Logger.log(11.26,"[切换Tab回Download]"); //
 				wait=WaitForWebElementToChange.newInstance(driver, By.className("aca_source"));
 				downloadsLoadMoreTab(aca_source, Constant.Download);
 				wait.waitForChange(1000);
@@ -293,18 +293,18 @@ public class BingAnalysisUtils {
 				}
 			}catch(NoSuchElementException e){}
 			//点击默认版面Load More
-//			VersionUtils.log(11.26,"[点击默认版面Load More]");//
+//			Logger.log(11.26,"[点击默认版面Load More]");//
 			papersLoadMoreSml(acapp_papers,driver);
 			if (hasReferences && hasCitedPapers){
 				//切换至Cited Papers
-//				VersionUtils.log(11.26,"[切换至Cited Papers]");//
+//				Logger.log(11.26,"[切换至Cited Papers]");//
 				papersLoadMoreTab(acapp_papers, Constant.Cited_Papers);
 				acapp_papers=driver.findElement(By.id("acapp_papers"));//重新加载一次acapp_papers
 				//点击Load More
-//				VersionUtils.log(11.26,"[点击Cited Papers的LoadMore]"); //
+//				Logger.log(11.26,"[点击Cited Papers的LoadMore]"); //
 				papersLoadMoreSml(acapp_papers,driver);
 				//切换回References
-//				VersionUtils.log(11.26,"[切换回References]");//
+//				Logger.log(11.26,"[切换回References]");//
 				papersLoadMoreTab(acapp_papers, Constant.References);
 			}
 		}catch(NoSuchElementException e){return;}

@@ -1,7 +1,5 @@
 package com.kelles.crawler.bingcrawler.util;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.math.BigInteger;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -13,16 +11,11 @@ import java.util.Set;
 import com.kelles.crawler.bingcrawler.setting.Setting;
 import org.ansj.domain.Result;
 import org.ansj.splitWord.analysis.ToAnalysis;
-import org.apache.http.util.TextUtils;
 import org.nlpcn.commons.lang.tire.library.Library;
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.pipeline.AnnotationPipeline;
-import edu.stanford.nlp.pipeline.MorphaAnnotator;
-import edu.stanford.nlp.pipeline.POSTaggerAnnotator;
-import edu.stanford.nlp.pipeline.ParserAnnotator;
 import edu.stanford.nlp.pipeline.TokenizerAnnotator;
-import edu.stanford.nlp.pipeline.WordsToSentencesAnnotator;
 import edu.stanford.nlp.util.CoreMap;
 
 
@@ -81,9 +74,9 @@ public class TextAnalysis {
 		    String str4="The Self-organising Exploratory Pattern of the Argentine Ant";
 		
 		BigInteger simHash1= getSimHash(str3),simHash2=getSimHash(str4);
-		VersionUtils.log(simHash1);
-		VersionUtils.log(simHash2);
-		VersionUtils.log(hammingDistance(simHash1,simHash2));
+		Logger.log(simHash1);
+		Logger.log(simHash2);
+		Logger.log(hammingDistance(simHash1,simHash2));
 		
 	}
 	
@@ -124,7 +117,7 @@ public class TextAnalysis {
 			    	  if (onlyN){
 			    		  /*只收录名词*/
 			    		  if (partOfSpeech.startsWith("N")){
-				    		  VersionUtils.log(11.11,"收录了英文"+lema);
+				    		  Logger.log(11.11,"收录了英文"+lema);
 				    		  keyWords.add(lema); 
 				    	  }
 			    	  }
@@ -136,7 +129,7 @@ public class TextAnalysis {
 			else{
 				if (onlyN){
 					if ((natureStr.startsWith("n")&&!"null".equals(natureStr))||natureStr.contains("define")){
-						VersionUtils.log(11.11, "收录了中文"+terms.get(i).getName()+"(词性"+terms.get(i).getNatureStr()+")");
+						Logger.log(11.11, "收录了中文"+terms.get(i).getName()+"(词性"+terms.get(i).getNatureStr()+")");
 						keyWords.add(terms.get(i).getName()); //只收录名词
 					}
 				}
@@ -145,7 +138,7 @@ public class TextAnalysis {
 
 			keyWordsCount++;
 		}
-		VersionUtils.log(11.11, "提取出关键词:\n"+keyWords+"");
+		Logger.log(11.11, "提取出关键词:\n"+keyWords+"");
 		
 		//计算64位签名
 		List<String> keyWordsList=new ArrayList();

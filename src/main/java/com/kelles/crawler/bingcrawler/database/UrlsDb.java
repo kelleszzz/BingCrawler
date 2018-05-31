@@ -149,10 +149,10 @@ public class UrlsDb{
 	}
 	
 	public void describe(){
-		if (VersionUtils.check(1)){
-			VersionUtils.log("数据库路径: "+env.getHome().getAbsolutePath());
+		if (Logger.check(1)){
+			Logger.log("数据库路径: "+env.getHome().getAbsolutePath());
 			List<String> dbNames=env.getDatabaseNames();
-			VersionUtils.log("数据库名: "+dbNames);
+			Logger.log("数据库名: "+dbNames);
 		}
 		describeDb(todoUrls);
 		describeDb(uniUrls);
@@ -161,16 +161,16 @@ public class UrlsDb{
 	private void describeDb(Database db){
 		Cursor cursor=null;
 		try{
-			VersionUtils.log("数据库"+db.getDatabaseName()+"包含Url:");
+			Logger.log("数据库"+db.getDatabaseName()+"包含Url:");
 			cursor=db.openCursor(null, null);
 			DatabaseEntry key=new DatabaseEntry();
 			DatabaseEntry value=new DatabaseEntry();
 			int i=0;
 			while (cursor.getNext(key, value, LockMode.DEFAULT)==OperationStatus.SUCCESS){
 				try {
-					VersionUtils.log("["+(++i)+"]"+"key = "+new String(key.getData(),"utf-8"));
+					Logger.log("["+(++i)+"]"+"key = "+new String(key.getData(),"utf-8"));
 				} catch (UnsupportedEncodingException e) {}
-				VersionUtils.log("value = "+serialBinding.entryToObject(value));
+				Logger.log("value = "+serialBinding.entryToObject(value));
 			};
 		}
 		catch (Exception e){

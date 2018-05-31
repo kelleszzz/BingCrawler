@@ -28,21 +28,27 @@ public class Util {
     protected final static FileServerSDK fileServerSDK=new FileServerSDK();
     protected final static Gson gson=new Gson();
 
+    public static boolean isEmpty(Object str){
+        return str == null || "".equals(str);
+    }
+
     public static void uploadFileAndGrant(File file){
         if (file==null) return;
         String file_id=UUID.randomUUID().toString();
         String file_access_code=UUID.randomUUID().toString();
         ResultDO resultDO=null;
         //上传至FileServer
-        VersionUtils.log(20180531.01,"[尝试上传至FileServer]"+file.getName());
+        Logger.log(20180531.01,"[尝试上传至FileServer]"+file.getName());
         InputStream is=Util.getInputStreamFromFile(file);
         if (is==null) return;
-        resultDO=fileServerSDK.insert(file_id,file_access_code,file.getName(),is);
+        String fileName=file.getName();
+        if (fileName.length()>35) fileName=fileName.substring(0,35);
+        resultDO=fileServerSDK.insert(file_id,file_access_code,fileName,is);
         if (!resultDO.getSuccess()){
-            VersionUtils.log(20180531.01,"[上传至FileServer失败]"+gson.toJson(resultDO));
+            Logger.log(20180531.01,"[上传至FileServer失败]"+gson.toJson(resultDO));
             return;
         }
-        VersionUtils.log(20180531.01,"[上传至FileServer成功]"+file.getName());
+        Logger.log(20180531.01,"[上传至FileServer成功]"+file.getName());
         try {
             is.close();
         } catch (IOException e) {
@@ -51,10 +57,10 @@ public class Util {
         //授权至UserServer
         resultDO=userServerSDK.grant(Setting.USER_ID,Setting.USER_ACCESS_CODE,file_id,file_access_code);
         if (!resultDO.getSuccess()){
-            VersionUtils.log(20180531.01,"[授权至UserServer失败]"+gson.toJson(resultDO));
+            Logger.log(20180531.01,"[授权至UserServer失败]"+gson.toJson(resultDO));
             return;
         }
-        VersionUtils.log(20180531.01,"[授权至UserServer成功]"+file.getName());
+        Logger.log(20180531.01,"[授权至UserServer成功]"+file.getName());
     }
 
 	/**
@@ -311,17 +317,17 @@ public class Util {
 		String protocol,host,hostUrl="";
 		if (m.matches()){
 			if ((protocol=m.group("protocol"))!=null) {
-//				VersionUtils.log(11.10,"protocol = "+protocol);
+//				Logger.log(11.10,"protocol = "+protocol);
 				hostUrl+=protocol;
 			}
 			if ((host=m.group("host"))!=null) {
 				int anIndex;
 				if ((anIndex=host.indexOf("/"))!=-1) host=host.substring(0, anIndex);
-//				VersionUtils.log(11.10,"host = "+host);
+//				Logger.log(11.10,"host = "+host);
 				hostUrl+=host;
 			}
 			if (TextUtils.isEmpty(hostUrl)) hostUrl=sourceUrl;
-//			VersionUtils.log(11.10,"还原为hostUrl = "+hostUrl);
+//			Logger.log(11.10,"还原为hostUrl = "+hostUrl);
 		}
 		return hostUrl;
 	}

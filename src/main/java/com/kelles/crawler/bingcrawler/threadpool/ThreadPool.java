@@ -80,7 +80,7 @@ public class ThreadPool<TaskObjectType extends TaskInterface> {
 					return;
 				}
 				else for (TaskThread thread:threads)
-					VersionUtils.log("[等待任务结束]"+thread.getTask().describe());
+					Logger.log("[等待任务结束]"+thread.getTask().describe());
 			}
 			new Thread(new Runnable(){
 				@Override
@@ -89,7 +89,7 @@ public class ThreadPool<TaskObjectType extends TaskInterface> {
 						try {Thread.sleep(500);} catch (InterruptedException e) {e.printStackTrace();}
 						synchronized (mutex){
 							if (threads.size()==0) {
-//								VersionUtils.log(11.27,"线程池"+manager.getHomePath()+"关闭");
+//								Logger.log(11.27,"线程池"+manager.getHomePath()+"关闭");
 								manager.close();
 								manager=null;
 								return;
@@ -158,7 +158,7 @@ public class ThreadPool<TaskObjectType extends TaskInterface> {
 	private void taskSuccess(TaskObjectType task){
 		byte[] keyBytes=task.getKeyBytes(); 
 		synchronized(mutex){
-//			VersionUtils.log(12.11,"[任务完成]"+task.describe()); //
+//			Logger.log(12.11,"[任务完成]"+task.describe()); //
 			 /*从数据库中移除该任务*/
 			if (manager.delete(keyBytes)!=OperationStatus.SUCCESS){
 				throw new RuntimeException("[任务完成,但未从数据库中正确移除]"+task.getKeyBytes());
