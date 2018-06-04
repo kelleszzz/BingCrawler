@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.kelles.crawler.crawler.analysis.TextAnalysis;
 import com.kelles.crawler.crawler.dataanalysis.bean.*;
 import com.kelles.crawler.crawler.dataanalysis.bean.ProfileSimHash;
 import com.kelles.crawler.crawler.database.weightdb.WeightDbManager;
@@ -100,10 +101,10 @@ public class BingDataAnalysisUtils {
 				if (i==0) break;
 			}
 		}
-		CommonAnalysis.strToFile(sb1.toString(), Setting.ROOT+ Setting.DATA_ANALYSIS+"/时间线分析", "各年代论文发表数.txt");
-		CommonAnalysis.strToFile(sb2.toString(), Setting.ROOT+ Setting.DATA_ANALYSIS+"/时间线分析", "各年代论文总引用数.txt");
-		CommonAnalysis.strToFile(sb3.toString(), Setting.ROOT+ Setting.DATA_ANALYSIS+"/时间线分析", "各年代论文平均引用数.txt");
-		CommonAnalysis.strToFile(sb4.toString(), Setting.ROOT+ Setting.DATA_ANALYSIS+"/时间线分析", "各年代活跃的主题.txt");
+		CommonAnalysis.textToFile(sb1.toString(), Setting.ROOT+ Setting.DATA_ANALYSIS+"/时间线分析", "各年代论文发表数.txt");
+		CommonAnalysis.textToFile(sb2.toString(), Setting.ROOT+ Setting.DATA_ANALYSIS+"/时间线分析", "各年代论文总引用数.txt");
+		CommonAnalysis.textToFile(sb3.toString(), Setting.ROOT+ Setting.DATA_ANALYSIS+"/时间线分析", "各年代论文平均引用数.txt");
+		CommonAnalysis.textToFile(sb4.toString(), Setting.ROOT+ Setting.DATA_ANALYSIS+"/时间线分析", "各年代活跃的主题.txt");
 	}
 	
 	

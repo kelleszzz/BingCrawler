@@ -2,10 +2,7 @@ package com.kelles.crawler.crawler.bean;
 
 import java.io.Serializable;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import com.kelles.crawler.crawler.util.Md5;
 import com.kelles.crawler.crawler.util.Util;
@@ -20,21 +17,19 @@ public class CrawlUrl implements Serializable{
 	private int depth=0; //深度
 	private int weight=DEFAULT_WEIGHT; //根据这个值从todoUrls中取出
 	private int statusCode;
-	private List<String> messages=new ArrayList(); //todoUrls中可能包含的信息
+	private Map<String,String> messages=new HashMap<>(); //信息
 	private Set<String> urlsReferTo=new HashSet();
 	private Set<String> urlsReferedTo=new HashSet();
-	
-	
-	
-	public List<String> getMessages() {
-		return messages;
-	}
 
-	public void setMessages(List<String> messages) {
-		this.messages = messages;
-	}
+    public Map<String, String> getMessages() {
+        return messages;
+    }
 
-	public int getDepth() {
+    public void setMessages(Map<String, String> messages) {
+        this.messages = messages;
+    }
+
+    public int getDepth() {
 		return depth;
 	}
 

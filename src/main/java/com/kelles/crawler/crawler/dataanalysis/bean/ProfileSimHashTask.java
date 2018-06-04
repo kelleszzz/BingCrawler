@@ -7,6 +7,7 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Random;
 
+import com.kelles.crawler.crawler.analysis.TextAnalysis;
 import com.kelles.crawler.crawler.database.weightdb.WeightDbManager;
 import com.kelles.crawler.crawler.threadpool.TaskInterface;
 import org.apache.http.util.TextUtils;
@@ -71,7 +72,7 @@ public class ProfileSimHashTask implements TaskInterface,Serializable{
 				sb.append(" ");
 				for (String keyword:keywords) sb.append(keyword+" ");
 			}
-			result=TextAnalysis.getSimHash(sb.toString());
+			result= TextAnalysis.getSimHash(sb.toString());
 			Logger.log("[摘要获得]"+profileAbstract.getTitle()); //
 		}
 		if (disturbed>0){

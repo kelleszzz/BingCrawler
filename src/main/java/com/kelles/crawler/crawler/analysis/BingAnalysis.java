@@ -44,7 +44,7 @@ public class BingAnalysis {
 //		html=seleniumGetBingAcademicProfileHtml("http://cn.bing.com/academic/profile?id=2126105956&encoded=0&v=paper_preview&mkt=zh-cn#",driver);
 		html=seleniumGetBingAcademicProfileHtml("http://cn.bing.com/academic/profile?id=2340633806&encoded=0&v=paper_preview&mkt=zh-cn", driver);
 //		html=seleniumGetBingAcademicProfileHtml("https://www.bing.com/academic/profile?id=2064920134&encoded=0&v=paper_preview&mkt=zh-cn", driver);
-		if (html!=null) CommonAnalysis.strToFile(Util.htmlFormatting(html),"BingAnalysisTest","BingAnalysis.html");
+		if (html!=null) CommonAnalysis.textToFile(Util.htmlFormatting(html),"BingAnalysisTest","BingAnalysis.html");
 		Profile profile=analyzeBingAcademicProfile(html);
 		System.out.println("[分析出Profile]\n"+profile);
 		//关闭这个浏览器
@@ -188,13 +188,13 @@ public class BingAnalysis {
 					WebElement contentElement=driver.findElement(By.tagName("html"));
 					if (!TextUtils.isEmpty(contentElement.getText())) {
 						int contentTextLength=contentElement.getText().length();
-						if (contentTextLength!=arg0){
-							arg0=contentTextLength;
-							arg1=0;
+						if (contentTextLength!= lastContentTextLength){
+							lastContentTextLength =contentTextLength;
+							contentSameAsLast =0;
 							throw new NoSuchElementException("页面内容仍在更新中");
 						}
-						else if (contentTextLength==arg0 && arg1==0){
-							arg1=1;
+						else if (contentTextLength== lastContentTextLength && contentSameAsLast ==0){
+							contentSameAsLast =1;
 							throw new NoSuchElementException("页面内容未变化,再等待更新一次");
 						}
 						else return contentElement;

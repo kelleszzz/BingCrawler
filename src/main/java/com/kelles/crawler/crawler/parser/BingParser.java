@@ -8,9 +8,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.kelles.crawler.crawler.setting.Constant;
 import com.kelles.crawler.crawler.setting.Setting;
-import org.apache.http.HttpStatus;
 import org.apache.http.util.TextUtils;
 
 import com.kelles.crawler.crawler.util.*;
@@ -24,21 +22,21 @@ import com.sleepycat.je.OperationStatus;
 //爬取必应学术的Parser
 public class BingParser extends AbstractParser {
 
-    private DbManager<Profile> profilesManager = null;
+    private DbManager<Profile> profilesManager;
 
     public static void main(String[] args) {
         BingParser parser = null;
         try {
             parser = new BingParser();
             parser.addBingAcademicTheme("artificial intelligence papers", 1); //必应学术搜索第一页
-            parser.start();
+            parser.menu();
         } finally {
             parser.close();
         }
     }
 
     @Override
-    public void start() {
+    public void menu() {
         menu:
         for (; ; ) {
             Logger.log(Setting.MENU + " | pf->结构化内容");
@@ -88,8 +86,8 @@ public class BingParser extends AbstractParser {
             String html = CommonAnalysis.seleniumGetHtml(url, remoteDriver.getDriver());
             if (html == null) throw new Exception("未能获取指定Bing学术搜索页面:" + url);
             //按照自定义规则保存html文本至文件
-            String fileName = CommonAnalysis.urlGetFileName(URLDecoder.decode(url, "utf-8"));
-            File f = CommonAnalysis.strToFile(Util.htmlFormatting(html), Setting.HTMLURLS_PATH, fileName);
+            String fileName = CommonAnalysis.filterFileName(URLDecoder.decode(url, "utf-8"));
+            File f = CommonAnalysis.textToFile(Util.htmlFormatting(html), Setting.HTMLURLS_PATH, fileName);
             //
             List<Profile> linkProfiles = BingAnalysis.analyzeBingAcademicSearch(html);
             if (linkProfiles != null)
@@ -138,17 +136,17 @@ public class BingParser extends AbstractParser {
         /*添加url至uniUrls*/
         if (html == null) {
             Logger.log("[无法访问]" + url);
-            urlsDbManager.settleUrl(url, HttpStatus.SC_NOT_FOUND);
+            urlsDbManager.settleUrl(url, Setting.STATUS_URL_NOT_FOUND);
             return;
-        } else urlsDbManager.settleUrl(url, HttpStatus.SC_OK);
+        } else urlsDbManager.settleUrl(url, Setting.STATUS_URL_SUCCESS);
         /*按照自定义规则保存html文本至文件*/
         String fileName = null;
         try {
-            fileName = CommonAnalysis.urlGetFileName(URLDecoder.decode(url, "utf-8"));
+            fileName = CommonAnalysis.filterFileName(URLDecoder.decode(url, "utf-8"));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        File f = CommonAnalysis.strToFile(Util.htmlFormatting(html), Setting.HTMLURLS_PATH, fileName);
+        File f = CommonAnalysis.textToFile(Util.htmlFormatting(html), Setting.HTMLURLS_PATH, fileName);
         /*分析html*/
         if (isProfileUrl) {
             /*提取Profile,保存至profilesDb*/
@@ -184,7 +182,7 @@ public class BingParser extends AbstractParser {
                     if (linkProfile.getAuthors() != null)
                         for (String author : linkProfile.getAuthors())
                             messages.add(author);
-                    urlsDbManager.updateMessages(linkUrl, messages);
+                    urlsDbManager.updateMessagesOfTodoUrls(linkUrl, messages);
                 } else if (BingAnalysisUtils.isBingAcademicProfileUrl(linkUrl)) {
                     urlsDbManager.putUrl(linkUrl, url);
                     urlsDbManager.updateWeight(linkUrl, CrawlUrl.DEFAULT_WEIGHT + 1); /*提高优先级*/
@@ -203,7 +201,7 @@ public class BingParser extends AbstractParser {
             Logger.log(content.toString());
             /* 添加链接url至todoUrls*/
             if (linkProfiles != null) {
-                List<String> messages = urlsDbManager.getMessages(url); //获取messages
+                List<String> messages = urlsDbManager.getMessagesFromUniUrls(url); //获取messages
                 for (Profile linkProfile : linkProfiles) {
                     if (linkProfile.getUrl() == null) continue;
                     linkProfile.setUrl(Util.removeSuffix(linkProfile.getUrl()));

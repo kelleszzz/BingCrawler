@@ -103,7 +103,7 @@ public class BingDataAnalysis {
 			sb.append("[爬取的链接数]\r\n"+urlsManager.sizeUniUrls()+"\r\n");
 			sb.append("[分析的论文数]\r\n"+profilesManager.size()+"\r\n");
 			sb.append("[下载成功的论文数]\r\n"+BingDataAnalysisUtils.getDownloadProfilesCount(PROFILES_PATH)+"\r\n");
-			CommonAnalysis.strToFile(sb.toString(), Setting.ROOT+ Setting.DATA_ANALYSIS, "爬取总数.txt");
+			CommonAnalysis.textToFile(sb.toString(), Setting.ROOT+ Setting.DATA_ANALYSIS, "爬取总数.txt");
 		}
 		/*时间线*/
 		if (analyzeTimeline){
@@ -118,7 +118,7 @@ public class BingDataAnalysis {
 					sb.append("====================YEAR "+timeline.getYear()+"====================\r\n");
 					sb.append(timeline+"\r\n\r\n");
 				}
-				CommonAnalysis.strToFile(sb.toString(), Setting.ROOT+ Setting.DATA_ANALYSIS+"/时间线分析", "年份详细.txt");
+				CommonAnalysis.textToFile(sb.toString(), Setting.ROOT+ Setting.DATA_ANALYSIS+"/时间线分析", "年份详细.txt");
 			}catch(Exception e){e.printStackTrace();}
 		}
 		/*论文排序*/
@@ -127,11 +127,11 @@ public class BingDataAnalysis {
 				Logger.log("[论文排序]"); //
 				java.lang.String result=null;
 				result=BingDataAnalysisUtils.analyzeProfiles(profilesCitedByManager, null ,topCount);
-				CommonAnalysis.strToFile(result, Setting.ROOT+ Setting.DATA_ANALYSIS+"/论文排序", "引用数最高的论文.txt");
+				CommonAnalysis.textToFile(result, Setting.ROOT+ Setting.DATA_ANALYSIS+"/论文排序", "引用数最高的论文.txt");
 				result=BingDataAnalysisUtils.analyzeProfiles(profilesLinkedCitedByManager,"(有记录可查询的)引用次数", topCount);
-				CommonAnalysis.strToFile(result, Setting.ROOT+ Setting.DATA_ANALYSIS+"/论文排序", "(有记录可查询的)引用数最高论文.txt");
+				CommonAnalysis.textToFile(result, Setting.ROOT+ Setting.DATA_ANALYSIS+"/论文排序", "(有记录可查询的)引用数最高论文.txt");
 				result=BingDataAnalysisUtils.analyzeProfiles(profilesSourcesManager,"来源次数",topCount);
-				CommonAnalysis.strToFile(result, Setting.ROOT+ Setting.DATA_ANALYSIS+"/论文排序", "网络来源最多的论文.txt");
+				CommonAnalysis.textToFile(result, Setting.ROOT+ Setting.DATA_ANALYSIS+"/论文排序", "网络来源最多的论文.txt");
 			}catch(Exception e){e.printStackTrace();}
 		}
 		/*作者(期刊会议依赖作者,关键词依赖作者)*/
@@ -151,7 +151,7 @@ public class BingDataAnalysis {
 						sb.append(author+"\r\n\r\n");
 					}
 //					Logger.log(sb.toString());//
-					CommonAnalysis.strToFile(sb.toString(), Setting.ROOT+ Setting.DATA_ANALYSIS, "影响力最高的作者.txt");
+					CommonAnalysis.textToFile(sb.toString(), Setting.ROOT+ Setting.DATA_ANALYSIS, "影响力最高的作者.txt");
 				}
 			}catch(Exception e){e.printStackTrace();}
 		}
@@ -172,7 +172,7 @@ public class BingDataAnalysis {
 						sb.append(keyword+"\r\n\r\n");
 					}
 //					Logger.log(sb.toString());//
-					CommonAnalysis.strToFile(sb.toString(), Setting.ROOT+ Setting.DATA_ANALYSIS, "人工智能领域.txt");
+					CommonAnalysis.textToFile(sb.toString(), Setting.ROOT+ Setting.DATA_ANALYSIS, "人工智能领域.txt");
 				}
 			}catch(Exception e){e.printStackTrace();}
 		}
@@ -192,7 +192,7 @@ public class BingDataAnalysis {
 						sb.append(journal+"\r\n\r\n");
 					}
 //					Logger.log(sb.toString());//
-					CommonAnalysis.strToFile(sb.toString(), Setting.ROOT+ Setting.DATA_ANALYSIS, "期刊会议.txt");
+					CommonAnalysis.textToFile(sb.toString(), Setting.ROOT+ Setting.DATA_ANALYSIS, "期刊会议.txt");
 				}
 			}catch(Exception e){e.printStackTrace();}
 		}
@@ -228,7 +228,7 @@ public class BingDataAnalysis {
 						sb.append("====================TOP "+(++topCur)+"====================\r\n");
 						sb.append(profileSimHash+"\r\n\r\n");
 					}
-					CommonAnalysis.strToFile(sb.toString(), Setting.ROOT+ Setting.DATA_ANALYSIS, "论文相似度.txt");
+					CommonAnalysis.textToFile(sb.toString(), Setting.ROOT+ Setting.DATA_ANALYSIS, "论文相似度.txt");
 				}
 			}catch(Exception e){e.printStackTrace();}
 		}

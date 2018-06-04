@@ -15,6 +15,7 @@ import java.io.Closeable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 整合了UrlsDbManager、DownloadPool和RemoteDriver的基础Parser
@@ -33,20 +34,22 @@ public abstract class AbstractParser implements Closeable {
      * @param userInput
      * @return
      */
-    protected int handleUserInput(String userInput,String nextUrl) {
+    protected int handleUserInput(String userInput, String nextUrl) {
         if ("exit".equals(userInput)) {
             return Setting.STATUS_USERINPUT_EXIT;
         } else if ("p".equals(userInput)) {
-            settleUrl(nextUrl);
+            urlsDbManager.settleUrl(nextUrl, Setting.STATUS_URL_PASS);
             return Setting.STATUS_USERINPUT_SUCCESS;
         } else if ("db".equals(userInput)) {
             for (; ; ) {
                 Logger.log(Setting.MENU_DB);
                 try {
                     userInput = scanner.nextLine();
-                    if ("1".equals(userInput)) urlsDbManager.describe();
-                    else if ("2".equals(userInput)) downloadPool.describe();
-                    else if ("3".equals(userInput)) downloadPool.getManager().clearDb();
+                    if ("1".equals(userInput)) urlsDbManager.describe(true, true);
+                    else if ("2".equals(userInput)) urlsDbManager.describe(true, false);
+                    else if ("3".equals(userInput)) urlsDbManager.describe(false, true);
+                    else if ("4".equals(userInput)) downloadPool.describe();
+                    else if ("5".equals(userInput)) downloadPool.getManager().clearDb();
                     else break;
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -79,6 +82,10 @@ public abstract class AbstractParser implements Closeable {
             return Setting.STATUS_USERINPUT_SUCCESS;
         } else if ("download".equals(userInput)) {
             downloadPool.tryStart();
+            return Setting.STATUS_USERINPUT_SUCCESS;
+        } else if ("restart".equals(userInput)) {
+            restart();
+            return Setting.STATUS_USERINPUT_SUCCESS;
         } else {
             try {
                 onCrawlingUrl(nextUrl);
@@ -91,28 +98,35 @@ public abstract class AbstractParser implements Closeable {
             }
             return Setting.STATUS_USERINPUT_SUCCESS;
         }
-        return Setting.STATUS_USERINPUT_EXIT;
     }
 
-    public void start(){
-        menu:for (;; ) {
+    public void menu() {
+        menu:
+        for (; ; ) {
+            String nextUrl = urlsDbManager.getNext();
+            if (nextUrl != null) {
+                try {
+                    Logger.log("[即将分析]" + URLDecoder.decode(nextUrl, "utf-8"));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            }
             Logger.log(Setting.MENU);
             String userInput = scanner.nextLine();
-            String nextUrl = urlsDbManager.getNext();
-            try {
-                Logger.log("[即将分析]" + URLDecoder.decode(nextUrl, "utf-8"));
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-            switch (handleUserInput(userInput,nextUrl)){
+            switch (handleUserInput(userInput, nextUrl)) {
                 case Setting.STATUS_USERINPUT_SUCCESS: {
                     continue menu;
                 }
-                case Setting.STATUS_USERINPUT_EXIT:{
+                case Setting.STATUS_USERINPUT_EXIT: {
                     return;
                 }
             }
         }
+    }
+
+    public void restart() {
+        close();
+        setup();
     }
 
     protected void setup() {
@@ -124,6 +138,7 @@ public abstract class AbstractParser implements Closeable {
             urlsDbManager.setMaxDepth(3); //深度
             RemoteDriver.startService();
             remoteDriver = new RemoteDriver(false);
+            remoteDriver.getDriver().manage().timeouts().pageLoadTimeout(Setting.TIMEOUT_NAVIGATOR, TimeUnit.MILLISECONDS);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -152,19 +167,9 @@ public abstract class AbstractParser implements Closeable {
     protected void addUrl(String url) {
         if (Util.isEmpty(url)) return;
         if (urlsDbManager.putUrl(url) == OperationStatus.SUCCESS) {
-            Logger.log("[添加链接]" + url); //
-            urlsDbManager.updateWeight(url, CrawlUrl.DEFAULT_WEIGHT + 10);
+            Logger.log("[添加链接]" + url);
+            urlsDbManager.updateWeight(url, CrawlUrl.DEFAULT_WEIGHT);
         }
-    }
-
-    /**
-     * 从todoUrls中移除,并添加至uniUrls
-     *
-     * @param url
-     */
-    protected void settleUrl(String url) {
-        if (Util.isEmpty(url)) return;
-        urlsDbManager.settleUrl(url, 0);
     }
 
     /**

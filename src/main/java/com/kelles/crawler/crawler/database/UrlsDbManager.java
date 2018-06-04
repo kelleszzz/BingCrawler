@@ -72,7 +72,7 @@ public class UrlsDbManager {
                 } else break;
                 retVal = secCursor.getNextDup(foundKey, foundValue, LockMode.DEFAULT);
             }
-            manager.db.describe();
+            manager.db.describe(true, true);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -107,10 +107,48 @@ public class UrlsDbManager {
         return (size + 1);
     }
 
+    /**
+     * 获取一条消息
+     *
+     * @param url
+     * @param key
+     * @return
+     */
+    public String getMessage(String url, String key) {
+        if (key == null) return null;
+        Map<String, String> messages = getMessages(url);
+        if (messages != null) {
+            return messages.get(key);
+        }
+        return null;
+    }
+
+    /**
+     * 依次尝试从todoUrls,uniUrls中获取messages
+     *
+     * @param url
+     * @return
+     */
+    public Map<String, String> getMessages(String url) {
+        CrawlUrl crawlUrl = getCrawlUrl(url);
+        if (crawlUrl != null) {
+            if (crawlUrl.getMessages() != null) {
+                return crawlUrl.getMessages();
+            } else {
+                return new HashMap<>();
+            }
+        }
+        return null;
+    }
+
     //从uniUrls中获取messages
-    public List<String> getMessages(String url) {
+    @Deprecated
+    public List<String> getMessagesFromUniUrls(String url) {
         CrawlUrl crawlUrl = getCrawlUrlFromUniUrls(url);
-        if (crawlUrl != null && crawlUrl.getMessages() != null) return crawlUrl.getMessages();
+        if (crawlUrl != null && crawlUrl.getMessages() != null) {
+            Map<String, String> messages = crawlUrl.getMessages();
+            return messages != null ? new ArrayList<>(messages.values()) : null;
+        }
         return null;
     }
 
@@ -155,12 +193,76 @@ public class UrlsDbManager {
         return simHashs;
     }
 
+    /**
+     * 存入一条消息
+     *
+     * @param url
+     * @param key
+     * @param message
+     * @return
+     */
+    public OperationStatus putMessage(String url, String key, String message) {
+        if (key == null) return OperationStatus.KEYEMPTY;
+        Map<String, String> messages = getMessages(url);
+        if (message != null) {
+            messages.put(key, message);
+        }
+        return updateMessages(url, messages);
+    }
+
+    /**
+     * 依次尝试从todoUrls和uniUrls中更新messages
+     *
+     * @param url
+     * @param messages
+     * @return
+     */
+    protected OperationStatus updateMessages(String url, Map<String, String> messages) {
+        //获取CrawlUrl
+        CrawlUrl crawlUrl = getCrawlUrl(url);
+        if (crawlUrl == null) return OperationStatus.NOTFOUND;
+        //更新域
+        if (messages == null && crawlUrl.getMessages() != null) {
+            crawlUrl.getMessages().clear();
+        } else {
+            crawlUrl.setMessages(messages);
+        }
+        //依次尝试从todoUrls和uniUrls中更新messages
+        OperationStatus status = updateCrawlUrlFromTodoUrls(crawlUrl);
+        if (!OperationStatus.SUCCESS.equals(status)) {
+            status = updateCrawlUrlFromUniUrls(crawlUrl);
+        }
+        return status;
+    }
+
+    /**
+     * 依次尝试从todoUrls和uniUrls中获取CrawlUrl
+     *
+     * @param url
+     * @return
+     */
+    protected CrawlUrl getCrawlUrl(String url) {
+        CrawlUrl crawlUrl = getCrawlUrlFromTodoUrls(url);
+        if (crawlUrl == null) {
+            crawlUrl = getCrawlUrlFromUniUrls(url);
+        }
+        return crawlUrl;
+    }
+
     //更新相应todoUrls中的messages值
-    public OperationStatus updateMessages(String url, List<String> messages) {
+    @Deprecated
+    public OperationStatus updateMessagesOfTodoUrls(String url, List<String> messages) {
         CrawlUrl crawlUrl = getCrawlUrlFromTodoUrls(url);
         if (crawlUrl != null) {
-            if (messages == null && crawlUrl.getMessages() != null) crawlUrl.getMessages().clear();
-            else crawlUrl.setMessages(messages);
+            if (messages == null && crawlUrl.getMessages() != null) {
+                crawlUrl.getMessages().clear();
+            } else {
+                Map<String, String> messageMap = new HashMap<>();
+                for (String message : messages) {
+                    messageMap.put(message, message);
+                }
+                crawlUrl.setMessages(messageMap);
+            }
             return updateCrawlUrlFromTodoUrls(crawlUrl);
         }
         return OperationStatus.NOTFOUND;
@@ -176,9 +278,20 @@ public class UrlsDbManager {
         return OperationStatus.NOTFOUND;
     }
 
+    //根据相对差值,更新相应todoUrls中的weight值
+    public OperationStatus updateWeightByRelativeValue(String url, int weightRelativeValue) {
+        CrawlUrl crawlUrl = getCrawlUrlFromTodoUrls(url);
+        if (crawlUrl != null) {
+            crawlUrl.setWeight(crawlUrl.getWeight() + weightRelativeValue);
+            return updateCrawlUrlFromTodoUrls(crawlUrl);
+        }
+        return OperationStatus.NOTFOUND;
+    }
+
     //更新相应uniUrls中的simHash值
     public OperationStatus updateSimHash(String url, BigInteger simHash) {
         CrawlUrl crawlUrl = getCrawlUrlFromUniUrls(url);
+        if (crawlUrl == null) return OperationStatus.NOTFOUND;
         crawlUrl.setSimHash(simHash);
         return updateCrawlUrlFromUniUrls(crawlUrl);
     }
@@ -230,9 +343,9 @@ public class UrlsDbManager {
     }
 
     //从todoUrls移除url,并添加到uniUrls
-    public void settleUrl(String url, int statusCode) {
+    public OperationStatus settleUrl(String url, int statusCode) {
         Transaction txn = null;
-        if (url == null) return;
+        if (url == null) return OperationStatus.NOTFOUND;
         CrawlUrl crawlUrl = null;
         Cursor cursor = null;
         DatabaseEntry key = null;
@@ -249,9 +362,7 @@ public class UrlsDbManager {
                 crawlUrl = (CrawlUrl) db.serialBinding.entryToObject(value);
                 crawlUrl.setStatusCode(statusCode);
                 cursor.delete();
-            } else return;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            } else return OperationStatus.NOTFOUND;
         } finally {
             if (cursor != null) cursor.close();
             if (txn != null) txn.commit();
@@ -262,9 +373,7 @@ public class UrlsDbManager {
             DatabaseEntry value = new DatabaseEntry();
             cursor = db.uniUrls.openCursor(txn, null);
             db.serialBinding.objectToEntry(crawlUrl, value);
-            cursor.put(key, value);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            return cursor.put(key, value);
         } finally {
             if (cursor != null) cursor.close();
             if (txn != null) txn.commit();
@@ -408,8 +517,8 @@ public class UrlsDbManager {
         }
     }
 
-    public void describe() {
-        db.describe();
+    public void describe(boolean describeTodo, boolean describeUni) {
+        db.describe(describeTodo, describeUni);
     }
 
     //添加一个url至todoUrls,深度为urlReferedTo+1,hasDepthRestriction时有深度限制

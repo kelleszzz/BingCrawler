@@ -146,8 +146,6 @@ public class DownloadPool {
 					break;
 				}
 			}
-			//TODO 上传到FileServer,并授权给UserServer
-            Util.uploadFileAndGrant(task.getToFile());
 		}
 		tryStart();
 	}

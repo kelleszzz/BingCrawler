@@ -10,8 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.kelles.crawler.crawler.analysis.TextAnalysis;
 import com.kelles.crawler.crawler.database.weightdb.WeightInterface;
-import com.kelles.crawler.crawler.util.*;
 
 public class ProfileSimHash implements Serializable,WeightInterface{
 	private int weight=DEFAULT_WEIGHT;
@@ -44,7 +44,7 @@ public class ProfileSimHash implements Serializable,WeightInterface{
 			for (String key:keys){
 				if ((curCount++)>=topCount || distances.get(key)<0) break;
 				DecimalFormat df=new DecimalFormat("#.##");  
-				double percentage=distances.get(key)/(double)TextAnalysis.totalBits;
+				double percentage=distances.get(key)/(double) TextAnalysis.totalBits;
 				if (percentage>1) percentage=1;
 				sb.append(key+"(关联度"+df.format(percentage*100)+"%)\r\n");
 			}
