@@ -32,6 +32,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -42,12 +45,13 @@ public class TenderParser extends AbstractParser {
     UserServerSDK userServerSDK;
     Gson gson = new Gson();
     final static String MESSAGE_TITLE = "title";
+    ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(1, 3, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
 
     public static void main(String[] args) {
         TenderParser tenderParser = null;
         try {
             tenderParser = new TenderParser();
-//            tenderParser.addHomePage(Setting.URL_TENDER_HOMEPAGE);
+            tenderParser.addHomePage(Setting.URL_TENDER_HOMEPAGE);
             tenderParser.menu();
         } finally {
             if (tenderParser != null) {
@@ -82,6 +86,12 @@ public class TenderParser extends AbstractParser {
         if (Util.isEmpty(url) || !isResultPage(url)) return;
         OperationStatus status = null;
         try {
+            //获取标题
+            String title = urlsDbManager.getMessage(url, TenderParser.MESSAGE_TITLE);
+            if (title == null) {
+                Logger.log("[获取标题失败]" + url);
+                return;
+            }
             //获取html文本
             String html = CommonAnalysis.seleniumGetHtml(url, remoteDriver.getDriver());
             if (html == null) {
@@ -89,14 +99,8 @@ public class TenderParser extends AbstractParser {
                 urlsDbManager.updateWeightByRelativeValue(url, -1); //自降优先级
                 return;
             } else {
-                Logger.log("[分析结果页]" + url, true);
+                Logger.log("[分析结果页]" + title + " (url = " + url + ")", true);
                 urlsDbManager.updateWeightByRelativeValue(url, -1); //自降优先级,防止过程出错而循环爬取
-            }
-            //获取标题
-            String title = urlsDbManager.getMessage(url, TenderParser.MESSAGE_TITLE);
-            if (title == null) {
-                Logger.log("[获取标题失败]" + url);
-                return;
             }
             //保存html文本至本地文件
             Path dir = Paths.get(Setting.TENDER_PARSER_RESULT_DIRECTORY);
@@ -111,7 +115,7 @@ public class TenderParser extends AbstractParser {
             }
             CommonAnalysis.textToFile(Util.htmlFormatting(html), dir.toString(), path.getFileName().toString());
             //上传html文本至FileServer&UserServer
-            Util.uploadFileAndGrant(path, fileServerSDK, userServerSDK, gson);
+            Util.uploadFileAndGrantAsync(path, fileServerSDK, userServerSDK, gson, threadPoolExecutor);
             //从urlsDbManager中移除
             status = urlsDbManager.settleUrl(url, Setting.STATUS_URL_SUCCESS);
             if (!OperationStatus.SUCCESS.equals(status)) {
@@ -262,7 +266,7 @@ public class TenderParser extends AbstractParser {
             }
             CommonAnalysis.textToFile(Util.htmlFormatting(html), dir.toString(), path.getFileName().toString());
             //上传html文本至FileServer&UserServer
-            boolean resultUpload = Util.uploadFileAndGrant(path, fileServerSDK, userServerSDK, gson);
+            Util.uploadFileAndGrantAsync(path, fileServerSDK, userServerSDK, gson, threadPoolExecutor);
             //在搜索引擎中查找内容
             HttpUrl searchUrl = HttpUrl.parse(Setting.URL_SEARCH_ENGINE).newBuilder()
                     .addQueryParameter(Setting.QUERY_SEARCH_ENGINE, title).build();
@@ -275,7 +279,7 @@ public class TenderParser extends AbstractParser {
                 Logger.log("[提高优先级失败]" + searchUrl.toString(), true);
             }
             //从urlsDbManager中移除
-            status = urlsDbManager.settleUrl(url, resultUpload ? Setting.STATUS_URL_SUCCESS : Setting.STATUS_URL_UPLOAD_FAILURE);
+            status = urlsDbManager.settleUrl(url, Setting.STATUS_URL_SUCCESS);
             if (!OperationStatus.SUCCESS.equals(status)) {
                 Logger.log("[移除URL失败]" + url, true);
             }
@@ -322,7 +326,7 @@ public class TenderParser extends AbstractParser {
             }
             CommonAnalysis.textToFile(Util.htmlFormatting(html), dir.toString(), path.getFileName().toString());
             //上传html文本至FileServer&UserServer
-            Util.uploadFileAndGrant(path, fileServerSDK, userServerSDK, gson);
+            Util.uploadFileAndGrantAsync(path, fileServerSDK, userServerSDK, gson, threadPoolExecutor);
             //分析出网页中所有链接
             Document doc = Jsoup.parse(html);
             Elements links = doc.select("a[href]");
@@ -450,9 +454,11 @@ public class TenderParser extends AbstractParser {
 
     protected void addHomePage(String homePageUrl) {
         if (Util.isEmpty(homePageUrl)) return;
-        addUrl(homePageUrl);
-        //提高优先级,先爬取主页
-        urlsDbManager.updateWeight(homePageUrl, Integer.MAX_VALUE);
+        if (urlsDbManager.getCrawlUrlFromTodoUrls(homePageUrl) == null) {
+            addUrl(homePageUrl);
+            //提高优先级,先爬取主页
+            urlsDbManager.updateWeight(homePageUrl, Integer.MAX_VALUE);
+        }
     }
 
     @Override

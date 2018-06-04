@@ -63,7 +63,11 @@ public class Logger {
             String msg = obj instanceof String ? (String) obj : gson.toJson(obj);
             try {
                 if (decode) {
-                    msg = URLDecoder.decode(msg, Setting.DEFAULT_CHARSET.displayName());
+                    try {
+                        msg = URLDecoder.decode(msg, Setting.DEFAULT_CHARSET.displayName());
+                    } catch (UnsupportedEncodingException e) {
+                        //ignore
+                    }
                 }
                 fos = getFileStream();
                 PrintWriter pw = new PrintWriter(new OutputStreamWriter(fos, "utf-8"));
@@ -71,7 +75,6 @@ public class Logger {
                 pw.flush();
                 System.out.println(msg);
             } catch (UnsupportedEncodingException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             } finally {
                 try {

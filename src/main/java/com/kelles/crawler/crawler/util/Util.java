@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,8 +32,18 @@ public class Util {
         return str == null || "".equals(str);
     }
 
-    public static boolean uploadFileAndGrant(Path path, FileServerSDK fileServerSDK, UserServerSDK userServerSDK,Gson gson) {
-        if (path == null || fileServerSDK == null || userServerSDK == null) return false;
+    public static void uploadFileAndGrantAsync(Path path, FileServerSDK fileServerSDK, UserServerSDK userServerSDK, Gson gson, ThreadPoolExecutor threadPoolExecutor) {
+        if (threadPoolExecutor == null) return;
+        threadPoolExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                uploadFileAndGrant(path, fileServerSDK, userServerSDK, gson);
+            }
+        });
+    }
+
+    public static boolean uploadFileAndGrant(Path path, FileServerSDK fileServerSDK, UserServerSDK userServerSDK, Gson gson) {
+        if (path == null || fileServerSDK == null || userServerSDK == null || gson == null) return false;
         try {
             String file_id = UUID.randomUUID().toString();
             String file_access_code = UUID.randomUUID().toString();

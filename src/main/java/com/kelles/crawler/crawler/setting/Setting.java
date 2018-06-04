@@ -18,12 +18,12 @@ public class Setting {
     public final static String BING_PARSER_PROFILESDB_PATH = Setting.ROOT + "/bing_profilesdb_home"; //Urls数据库文件夹路径
     public final static String BING_PARSER_DOWNLOADPOOL_PATH = Setting.ROOT + "/bing_downloadpool_home"; //下载线程池数据库地址
     public static final int TIMEOUT_LOAD_HTML = 3000;
-    public static final int TIMEOUT_NAVIGATOR = 15000;
+    public static final int TIMEOUT_NAVIGATOR = 60000;
     public static final int TIME_POLLING_EVERY_LOAD_HTML = 500;
     public static final Charset DEFAULT_CHARSET = Charset.forName("utf-8");
 
     //Parser配置
-    public static final Double LOG_VERSION = 20180604.0125;
+    public static final Double LOG_VERSION = 20180604.1123;
     public final static int STATUS_USERINPUT_EXIT = -1;
     public final static int STATUS_USERINPUT_SUCCESS = 1;
     public final static int STATUS_URL_SUCCESS = 1;
@@ -62,5 +62,5 @@ public class Setting {
     public final static String EXCLUSION_BAIDU_PREFIX = "百度";
     public final static int MAX_HAMMING_DISTANCE = 60; //链接匹配最大海明距离
     public final static int MIN_TOKEN_SIZE = 3; //链接匹配最小分词数
-    public final static int HOME_PAGE_WEIGHT = CrawlUrl.DEFAULT_WEIGHT - 30;
+    public final static int HOME_PAGE_WEIGHT = CrawlUrl.DEFAULT_WEIGHT - 10;
 }
